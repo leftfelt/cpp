@@ -1,9 +1,13 @@
 #ifndef MATHECLASS_INCLUDE
 #define MATHECLASS_INCLUDE
 
+#include <time.h>
+#include <stdlib.h>
 #include <math.h>
 #include <vector>
 #include <algorithm>
+#include <base/PointClass.h>
+#include <random>
 /*
 * MathClass
 *
@@ -15,6 +19,8 @@ private:
 	static double Radian(double angle);
 public:
 	static double Pi; //円周率
+	static double generateUniform(std::mt19937 rng);
+	static double generateRandomNumber(double min, double max, std::mt19937 rng);
 	template<typename T> static double Sin(T angle);
 	template<typename T> static double Cos(T angle);
 	template<typename T> static double Tan(T angle);
@@ -24,6 +30,9 @@ public:
 	template<typename T> static T limit(T num, T min, T max);
 	template<typename T> static double cosSimilarity(std::vector<T> vector1, std::vector<T> vector2);
 	template<typename T> static double eucDistance(std::vector<T> vector1, std::vector<T> vector2);
+	static double distance(Point point1, Point point2);
+	template<typename T> static T average(std::vector<T> vector);
+	template<typename T> static T variance(std::vector<T> vector);
 };
 
 template<typename T> double Math::Sin(T angle){
@@ -56,6 +65,7 @@ template<typename T> T Math::limit(T num, T min, T max){
 	}
 }
 
+//コサイン類似度
 template<typename T> double Math::cosSimilarity(std::vector<T> vector1, std::vector<T> vector2){
 	double p_v1 = 0.0;
 	double p_v2 = 0.0;
@@ -72,6 +82,7 @@ template<typename T> double Math::cosSimilarity(std::vector<T> vector1, std::vec
 	return p_v1v2 / (sqrt(p_v1) * sqrt(p_v2));
 }
 
+//ユークリッド距離
 template<typename T> double Math::eucDistance(std::vector<T> vector1, std::vector<T> vector2){
 	double result = 0.0;
 	int v1_size = (signed)vector1.size();
@@ -81,5 +92,28 @@ template<typename T> double Math::eucDistance(std::vector<T> vector1, std::vecto
 	}
 	return sqrt(result);
 }
+
+//平均値
+template<typename T> T Math::average(std::vector<T> vector){
+	T sum;
+	for(int i = 0 ; i < (signed)vector.size() ; i++){
+		sum += vector[i];
+	}
+	return sum / (double)vector.size();
+}
+
+//分散
+template<typename T> T Math::variance(std::vector<T> vector){
+	T sum;
+	T average = Math::average(vector);
+	for(int i = 0 ; i < (signed)vector.size() ; i++){
+		T temp = vector[i] - average;
+		sum += temp * temp;
+	}
+	return sum / (double)vector.size();
+}
+
+//標準偏差
+
 
 #endif

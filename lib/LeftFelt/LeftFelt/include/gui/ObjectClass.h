@@ -13,4 +13,13 @@ public:
 	virtual void Delete() = 0;
 };
 
+//WindowObjectƒNƒ‰ƒX
+class WindowObject{
+public:
+	virtual void Initialize(HWND hWnd, HDC hdc) = 0;
+	virtual void Update(HWND hWnd, HDC hdc) = 0;
+	virtual void Draw(HWND hWnd, HDC hdc) = 0;
+	virtual void Delete(HWND hWnd, HDC hdc) = 0;
+};
+
 #endif

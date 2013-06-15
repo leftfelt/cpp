@@ -3,7 +3,7 @@
 
 #include <string>
 #include <windows.h>
-#include <gui/WindowClass.h>
+#include <gui/ObjectClass.h>
 #include <base/AreaClass.h>
 
 //Text Class
@@ -17,10 +17,10 @@ private:
 	Area area;
 public:
 	Text();
-	void Initialize();
-	void Update();
-	void Draw();
-	void Delete();
+	void Initialize(HWND hWnd, HDC hdc);
+	void Update(HWND hWnd, HDC hdc);
+	void Draw(HWND hWnd, HDC hdc);
+	void Delete(HWND hWnd, HDC hdc);
 
 	void Set(std::string text); //•¶š‚ğİ’è
 	void Color(unsigned char r,unsigned char g,unsigned char b); //F‚ğİ’è

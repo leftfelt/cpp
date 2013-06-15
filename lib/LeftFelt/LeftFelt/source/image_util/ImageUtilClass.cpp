@@ -118,12 +118,9 @@ bool ImageUtil::Load(biImage &image, String filename){
 	
 	fp = fopen( filename.c_str(),"rb");
 	if(fp == NULL ){
-		throw new String("画像が開けません(biLoadImage)");
+		throw std::exception("画像が開けません(biLoadImage)");
 		return false;
 	}
-
-	//初期化
-	image.Delete();
 
 	//ヘッダー部分読み取り
 	fseek(fp,sizeof(unsigned char)*10,SEEK_CUR);
@@ -633,7 +630,10 @@ void ImageUtil::Sobel(biImage &image){
 void ImageUtil::Laplacian(biImage &image){
 	Pixel pixel;
 	biImage temp;
-	int mask[9] = {0,1,0,1,-4,1,0,1,0};
+	int mask[9] = {
+		-1,-1,-1,
+		-1, 8,-1,
+		-1,-1,-1};
 	temp = image;
 	for(int j = 1 ; j < image.Height()-1 ; j++){
 		for(int i = 1 ; i < image.Width()-1 ; i++){
@@ -985,12 +985,11 @@ std::vector<SurfFeature> ImageUtil::getSurf(biImage &image, double threshold){
 	IplImage *ipl_image = NULL;
 	ImageUtil::toCvImage(&ipl_image, image);
 	cv::Mat mat(ipl_image), grayImage;
-	cvSaveImage("hoge.bmp",ipl_image);
 	
 	//toGray
 	cv::cvtColor(mat,grayImage,CV_BGR2GRAY);
 
-	cv::SURF calc_surf = cv::SURF(threshold,4,2,true);
+	cv::SURF calc_surf = cv::SURF(threshold);
 
 	std::vector<cv::KeyPoint> kp_vec;
 	std::vector<float> desc_vec;

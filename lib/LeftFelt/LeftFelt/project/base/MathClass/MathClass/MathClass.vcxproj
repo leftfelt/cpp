@@ -72,10 +72,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\..\source\base\MathClass.cpp" />
+    <ClCompile Include="..\..\..\..\source\base\PointClass.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\include\base\MathClass.h" />
+    <ClInclude Include="..\..\..\..\include\base\PointClass.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

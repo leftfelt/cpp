@@ -5,19 +5,8 @@
 #include <string>
 #include <vector>
 #include <gui/ObjectClass.h>
+#include <gui/ImageClass.h>
 
-//Windowクラス
-class Window;
-
-//WindowObjectクラス
-class WindowObject : public Object{
-protected:
-	Window *wnd;
-public:
-	WindowObject();
-	bool SetWindow(Window &wnd);
-	std::string ParentWindow();
-};
 
 //Windowクラス
 class Window {
@@ -26,6 +15,8 @@ private:
 	std::string title;	//タイトル名
 
 	int style;	//スタイル
+
+	Image display; //画面
 
 	int width; //幅
 	int height;//高さ
@@ -59,6 +50,8 @@ public:
 	
 	void AddObject(WindowObject *obj);		//オブジェクトを登録する
 	void DeleteObject(WindowObject *obj);		//オブジェクトを削除する
+
+	Image* getDisplay();
 
 	void hide();
 	void show();

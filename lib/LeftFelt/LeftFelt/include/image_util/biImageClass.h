@@ -10,7 +10,7 @@
 //biImageクラス
 class biImage{
 protected:
-	Pixel *mimage;//画像
+	std::vector<Pixel> mimage;//画像
 	bool flag;	//オペレータ用
 private:
 	Pixel clearColor; //透明色
@@ -67,14 +67,14 @@ public:
 inline void biImage::Put(int x, int y, Pixel pixel){
 	x = ((x < 0)? this->Width()+x : x)%this->Width();
 	y = ((y < 0)? this->Height()+y : y)%this->Height();
-	*(mimage+x+y*this->Width()) = pixel;
+	mimage.at(x+y*this->Width()) = pixel;
 }
 //ドットを取得=========================================================================
 inline Pixel biImage::Get(int x,int y){
 	x = ((x < 0)? this->Width()+x : x)%this->Width();
 	y = ((y < 0)? this->Height()+y : y)%this->Height();
-	if( this->clearColor == *(mimage+x+y*this->Width()) ) return Pixel();
-	return *(mimage+x+y*this->Width());
+	if( this->clearColor == mimage.at(x+y*this->Width()) ) return Pixel();
+	return mimage.at(x+y*this->Width());
 }
 
 #endif

@@ -26,27 +26,27 @@ public:
 	ImageUtilApp(){
 		wnd = this->createWindow("main");
 		load = new biImage;
-		ImageUtil::Load(*load,"../../../data/matumae1.bmp");
+		ImageUtil::Load(*load,"../../../../../../../data/matumae1.bmp");
 		load->Size(load->Width()/3,load->Height()/3);
 	
 		cross = new biImage;
-		ImageUtil::Load(*cross,"../../../data/cross.bmp");
+		ImageUtil::Load(*cross,"../../../../../../../data/cross.bmp");
 		cross->Size(load->Width(),load->Height());
 	
 		lenna = new biImage;
-		ImageUtil::Load(*lenna,"../../../data/lenna.bmp");
+		ImageUtil::Load(*lenna,"../../../../../../../data/lenna.bmp");
 		lenna->Size(load->Width(),load->Height());
 		
 		bulr = new biImage;
-		ImageUtil::Load(*bulr,"../../../data/bulr1.bmp");
+		ImageUtil::Load(*bulr,"../../../../../../../data/bulr1.bmp");
 		bulr->Size(load->Width(),load->Height());
 		
 		bulr2 = new biImage;
-		ImageUtil::Load(*bulr2,"../../../data/bulr3.bmp");
+		ImageUtil::Load(*bulr2,"../../../../../../../data/bulr3.bmp");
 		bulr2->Size(load->Width(),load->Height());
 	
 		img = new Image(load->Width()*6,load->Height()*5);
-		wnd->Size(load->Width()*6,load->Height()*5);
+		wnd->setSize(load->Width()*6,load->Height()*5);
 		background = new biImage(load->Width()*6,load->Height()*5);
 		*background = Pixel(255);
 	

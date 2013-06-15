@@ -9,14 +9,14 @@ Text::Text(){
 }
 
 //初期化
-void Text::Initialize(){
+void Text::Initialize(HWND hWnd, HDC hdc){
 	this->hFont=CreateFontIndirect(&logfont);
 }
 //更新処理
-void Text::Update(){
+void Text::Update(HWND hWnd, HDC hdc){
 }
 //描画処理
-void Text::Draw(){
+void Text::Draw(HWND hWnd, HDC hdc){
 	RECT area;
 	//領域
 	area.left = this->area.X();
@@ -25,14 +25,14 @@ void Text::Draw(){
 	area.bottom = area.top + this->area.Height();
 
 	//色の切り替え
-	SetTextColor(this->wnd->hdc, this->color);
+	SetTextColor(hdc, this->color);
 	//フォントの切り替え
-	SelectObject(this->wnd->hdc,hFont);
-	TextOut(this->wnd->hdc,area.left,area.top,text.c_str(),text.size());
+	SelectObject(hdc,hFont);
+	TextOut(hdc,area.left,area.top,text.c_str(),text.size());
 	//DrawText(this->wnd->hdc,text.c_str(),-1,&area, DT_LEFT | DT_WORDBREAK); //表示できてない
 }
 //削除処理
-void Text::Delete(){
+void Text::Delete(HWND hWnd, HDC hdc){
 	DeleteObject(this->hFont);
 }
 //文字を設定

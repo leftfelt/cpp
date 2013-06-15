@@ -48,7 +48,8 @@ void biImage::init(){
 	height = 0;
 	width = 0;
 
-	mimage = NULL;
+	mimage.clear();
+	std::vector<Pixel>(mimage).swap(mimage);
 }
 
 void biImage::Create(int width, int height){
@@ -58,17 +59,17 @@ void biImage::Create(int width, int height){
 	this->height = height;
 
 	//--------------------------------------------------------------------------------------------
-	mimage = new Pixel[this->width*this->height];
+	mimage.resize(this->width * this->height);
 }
 
 //‰æ‘œ‚ð•Û‘¶
 bool biImage::Save(String filename){
-	throw new String("ImageUtil::Save‚ðŽg—p‚µ‚Ä‚­‚¾‚³‚¢");
+	throw std::exception("ImageUtil::Save‚ðŽg—p‚µ‚Ä‚­‚¾‚³‚¢");
 	return true;
 }
 //‰æ‘œ‚ð“Ç‚Ýž‚Ý
 bool biImage::Load(String filename){
-	throw new String("ImageUtil::Load‚ðŽg—p‚µ‚Ä‚­‚¾‚³‚¢");
+	throw std::exception("ImageUtil::Load‚ðŽg—p‚µ‚Ä‚­‚¾‚³‚¢");
 	return true;
 }
 //‰æ‘œ‚ð“\‚è•t‚¯
@@ -93,7 +94,6 @@ biImage biImage::Cut(int x, int y, int width, int height){
 }
 //‰æ‘œ‚ðÁ‹Ž
 void biImage::Delete(){
-	delete[] this->mimage;
 	this->init();
 }
 
@@ -124,7 +124,7 @@ void biImage::Width(int width){
 void biImage::Height(int height){
 	Size(this->Width(),height);
 }
-//‘å‚«‚³‚ð•ÏX
+//‘å‚«‚³‚ð•ÏX(—vƒŠƒtƒ@ƒNƒ^)
 void biImage::Size(int width ,int height ){
 	biImage image;
 
@@ -168,7 +168,7 @@ biImage biImage::Rotate(int angle){//‰ñ“]
 biImage biImage::operator=(const biImage& image){
 	//‚±‚±‚¾‚¯‚Íconst‚ª‚Â‚¢‚Ä‚¢‚é‚Ì‚Åimage‚ÍWidth(),Height()‚ªŽg‚¦‚È‚¢
 	if(this->Width() < image.width || this->Height() < image.height
-		|| mimage == NULL){
+		|| mimage.empty()){
 		Delete();
 		this->Create(image.width,image.height);
 	}else{
@@ -180,7 +180,7 @@ biImage biImage::operator=(const biImage& image){
 
 	//‰æ‘f‚Ì“à—e‚ðƒRƒs[
 	biImage::for_each(*this,[&](int i, int j){
-		*(mimage+i+j*this->Width()) = *(image.mimage+i+j*image.width);
+		mimage.at(i+j*this->Width()) = image.mimage.at(i+j*image.width);
 	});
 
 	return *this;
@@ -284,7 +284,7 @@ biImage biImage::operator+=(biImage &image){	//‚¨ŒÝ‚¢‚Ì‰æ‘f‚ð‘«‚·
 	else height = this->Height();
 
 	biImage::for_each(*this,[&](int i, int j){
-		*(this->mimage+i+j*this->Width()) = *(this->mimage+i+j*this->Width()) + *(image.mimage+i+j*image.Width());
+		this->mimage.at(i+j*this->Width()) = this->mimage.at(i+j*this->Width()) + image.mimage.at(i+j*image.Width());
 	});
 
 
@@ -303,7 +303,7 @@ biImage biImage::operator-=(biImage &image){	//‚¨ŒÝ‚¢‚Ì‰æ‘f‚ðˆø‚­
 	else height = this->Height();
 
 	biImage::for_each(*this,[&](int i, int j){
-		*(this->mimage+i+j*this->Width()) = *(this->mimage+i+j*this->Width()) - *(image.mimage+i+j*image.Width());
+		this->mimage.at(i+j*this->Width()) = this->mimage.at(i+j*this->Width()) - image.mimage.at(i+j*image.Width());
 	});
 	return *this;
 }
@@ -319,7 +319,7 @@ biImage biImage::operator*=(biImage &image){	//‚¨ŒÝ‚¢‚Ì‰æ‘f‚ðŠ|‚¯‚é
 	else height = this->Height();
 
 	biImage::for_each(*this,[&](int i, int j){
-		*(this->mimage+i+j*this->Width()) = *(this->mimage+i+j*this->Width()) * *(image.mimage+i+j*image.Width());
+		this->mimage.at(i+j*this->Width()) = this->mimage.at(i+j*this->Width()) * image.mimage.at(i+j*image.Width());
 	});
 	return *this;
 }
@@ -336,35 +336,35 @@ biImage biImage::operator/=(biImage &image){	//‚¨ŒÝ‚¢‚Ì‰æ‘f‚ðŠ„‚é
 	else height = this->Height();
 
 	biImage::for_each(*this,[&](int i, int j){
-		*(this->mimage+i+j*this->Width()) = *(this->mimage+i+j*this->Width()) / *(image.mimage+i+j*image.Width());
+		this->mimage.at(i+j*this->Width()) = this->mimage.at(i+j*this->Width()) / image.mimage.at(i+j*image.Width());
 	});
 	return *this;
 }
 
 biImage biImage::operator+=(Pixel pixel){	//‚¨ŒÝ‚¢‚Ì‰æ‘f‚ð‚½‚·
 	biImage::for_each(*this,[&](int i, int j){
-		*(this->mimage+i+j*this->Width()) = *(this->mimage+i+j*this->Width()) + pixel;
+		this->mimage.at(i+j*this->Width()) = this->mimage.at(i+j*this->Width()) + pixel;
 	});
 	return *this;
 }
 
 biImage biImage::operator-=(Pixel pixel){	//‚¨ŒÝ‚¢‚Ì‰æ‘f‚ðˆø‚­
 	biImage::for_each(*this,[&](int i, int j){
-		*(this->mimage+i+j*this->Width()) = *(this->mimage+i+j*this->Width()) - pixel;
+		this->mimage.at(i+j*this->Width()) = this->mimage.at(i+j*this->Width()) - pixel;
 	});
 	return *this;
 }
 
 biImage biImage::operator*=(Pixel pixel){	//‚¨ŒÝ‚¢‚Ì‰æ‘f‚ð‚©‚¯‚é
 	biImage::for_each(*this,[&](int i, int j){
-		*(this->mimage+i+j*this->Width()) = *(this->mimage+i+j*this->Width()) * pixel;
+		this->mimage.at(i+j*this->Width()) = this->mimage.at(i+j*this->Width()) * pixel;
 	});
 	return *this;
 }
 
 biImage biImage::operator/=(Pixel pixel){	//‚¨ŒÝ‚¢‚Ì‰æ‘f‚ðŠ„‚é
 	biImage::for_each(*this,[&](int i, int j){
-		*(this->mimage+i+j*this->Width()) = *(this->mimage+i+j*this->Width()) / pixel;
+		this->mimage.at(i+j*this->Width()) = this->mimage.at(i+j*this->Width()) / pixel;
 	});
 	return *this;
 }

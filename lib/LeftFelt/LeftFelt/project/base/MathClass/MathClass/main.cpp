@@ -1,7 +1,10 @@
 #include <iostream>
+#include <string>
 #include <base/MathClass.h>
 
 void main(){
+
+	std::string bar = "=================================";
 	int a = 4;
 	int b = 0;
 	double c;
@@ -27,6 +30,37 @@ void main(){
 	v2.push_back(0);
 
 	std::cout << Math::cosSimilarity(v1,v2) << std::endl;
+
+	std::cout << Math::distance(Point(0,0), Point(1,1)) << std::endl;
+
+	v1.clear();
+	v1.push_back(1);
+	v1.push_back(2);
+	v1.push_back(3);
+	v1.push_back(4);
+	v1.push_back(5);
+
+	std::cout << Math::average(v1) << std::endl;
+	std::cout << Math::variance(v1) << std::endl;
+
+	std::mt19937 rng;
+
+	std::cout << bar << std::endl;
+	for(int i=0 ; i<10 ; i++){
+		std::cout << Math::generateRandomNumber(-1000, 1000, rng) << std::endl;
+	}
+	
+	std::cout << bar << std::endl;
+	srand((unsigned int)time(NULL));
+	for(int i=0 ; i<10 ; i++){
+		std::cout << Math::generateUniform(rng) << std::endl;
+	}
+
+	std::cout << bar << std::endl;
+	srand((unsigned int)time(NULL));
+	for(int i=0 ; i<10 ; i++){
+		std::cout << Math::generateRandomNumber(-1, 1, rng) / pow(10.0, Math::generateRandomNumber(0, 6, rng)) << std::endl;
+	}
 
 	getchar();
 }

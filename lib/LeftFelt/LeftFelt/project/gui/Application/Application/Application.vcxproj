@@ -17,6 +17,7 @@
     <ClCompile Include="..\..\..\..\source\gui\MouseClass.cpp" />
     <ClCompile Include="..\..\..\..\source\gui\TextClass.cpp" />
     <ClCompile Include="..\..\..\..\source\gui\WindowClass.cpp" />
+    <ClCompile Include="..\..\..\..\source\image_util\biImageClass.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -27,6 +28,7 @@
     <ClInclude Include="..\..\..\..\include\gui\ObjectClass.h" />
     <ClInclude Include="..\..\..\..\include\gui\TextClass.h" />
     <ClInclude Include="..\..\..\..\include\gui\WindowClass.h" />
+    <ClInclude Include="..\..\..\..\include\image_util\biImageClass.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{A07DAC84-3CCF-4E72-9455-FD9A8326F2AF}</ProjectGuid>

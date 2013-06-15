@@ -22,7 +22,7 @@ void Image::setPos(int x,int y){
 	this->my = y;
 }
 
-void Image::Initialize(){
+void Image::Initialize(HWND hWnd, HDC hdc){
 	HDC bhdc;
 
 	//初期設定
@@ -37,14 +37,14 @@ void Image::Initialize(){
 	bmi.bmiHeader = pbmi;
 	
 	//HBITMAP作成
-	bhdc = GetDC(this->wnd->hWnd);
+	bhdc = GetDC(hWnd);
 	hBmp = CreateDIBSection(bhdc, (LPBITMAPINFO)&bmi, DIB_RGB_COLORS,((void**)&bits),NULL,0);
 	hdc_mem = CreateCompatibleDC(bhdc);
 	SelectObject(hdc_mem,hBmp);
-	ReleaseDC(this->wnd->hWnd,bhdc);
+	ReleaseDC(hWnd,bhdc);
 }
 
-void Image::Update(){
+void Image::Update(HWND hWnd, HDC hdc){
 	
 	int i,j;
 	int width = Width();
@@ -54,22 +54,22 @@ void Image::Update(){
 	for(j = 0 ; j < height ; j++){
 		for(i = 0 ; i < width ; i++){
 			if(j < height &&  i < width){//サイズが超えてないか
-				(bits+i+(height-1-j)*width)->rgbBlue		 = (mimage+i+j*width)->Blue();
-				(bits+i+(height-1-j)*width)->rgbGreen		 = (mimage+i+j*width)->Green();
-				(bits+i+(height-1-j)*width)->rgbRed			 = (mimage+i+j*width)->Red();
+				(bits+i+(height-1-j)*width)->rgbBlue		 = mimage.at(i+j*width).Blue();
+				(bits+i+(height-1-j)*width)->rgbGreen		 = mimage.at(i+j*width).Green();
+				(bits+i+(height-1-j)*width)->rgbRed			 = mimage.at(i+j*width).Red();
 				(bits+i+(height-1-j)*width)->rgbReserved	 = 0;
 			}
 		}
 	}
 }
 
-void Image::Draw(){
+void Image::Draw(HWND hWnd, HDC hdc){
 	//表示
-	BitBlt(this->wnd->hdc,mx,my,Width(),Height(),hdc_mem,0,0,SRCCOPY);
+	BitBlt(hdc,mx,my,Width(),Height(),hdc_mem,0,0,SRCCOPY);
 	
 }
 
-void Image::Delete(){
+void Image::Delete(HWND hWnd, HDC hdc){
 	DeleteObject(hBmp);
 	DeleteDC(hdc_mem);
 }

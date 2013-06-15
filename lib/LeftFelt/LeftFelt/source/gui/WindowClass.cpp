@@ -1,27 +1,5 @@
 #include "gui/WindowClass.h"
 
-WindowObject::WindowObject(){
-	this->wnd = NULL;
-}
-
-//実行するウィンドウを設定する。
-bool WindowObject::SetWindow(Window &wnd){
-	if(this->wnd == NULL){
-		this->wnd = &wnd;
-		return true;
-	}else{
-		this->wnd->DeleteObject(this);
-		this->wnd = &wnd;
-		return true;
-	}
-	return false;
-}
-
-//親ウィンドウIDを取得
-std::string WindowObject::ParentWindow(){
-	return this->wnd->getID();
-}
-
 //==============================================================================
 //アプリケーションのインスタンスハンドル
 HINSTANCE Window::hInst = 0;
@@ -30,8 +8,8 @@ HINSTANCE Window::hInst = 0;
 Window::Window(std::string id){
 	this->id = id;
 	this->style = WS_OVERLAPPEDWINDOW;
-	this->setWidth(640);
-	this->setHeight(480);
+	this->display.Create(640,480);
+	this->setSize(640,480);
 
 	this->Initialize();
 }
@@ -43,8 +21,11 @@ Window::~Window(){
 //大きさを設定
 void Window::setSize(int width, int height){
 	RECT rc;
-	this->setWidth(width);
-	this->setHeight(height);
+
+	this->width = width;
+	this->height = height;
+
+	this->display.Size(this->width, this->height);
 	
 	SetRect(&rc, 0, 0, width, height);
 	AdjustWindowRect( &rc, this->style , FALSE );
@@ -89,7 +70,7 @@ int  Window::getWidth(){
 }
 //幅を設定
 void  Window::setWidth(int width){
-	this->width = width;
+	this->setSize(width, this->height);
 }
 
 //高さ取得
@@ -98,27 +79,28 @@ int  Window::getHeight(){
 }
 //高さ設定
 void  Window::setHeight(int height){
-	this->height = height;
+	this->setSize(this->width, height);
 }
 
 //オブジェクトを追加
 void Window::AddObject(WindowObject *obj){
-	if(obj->SetWindow(*this)){
-		this->obj.push_back(obj);
-	}
-	obj->Initialize();
+	this->obj.push_back(obj);
+	obj->Initialize(this->hWnd, this->hdc);
 }
 
 //オブジェクトを削除
 void Window::DeleteObject(WindowObject *obj){
-	this->obj.size();
-	if(this->obj.empty() == true){
+	if(this->obj.empty()){
 		std::vector<WindowObject*>::iterator itr;
 		for( itr=this->obj.begin() ; itr != this->obj.end() ; itr++ ){
 			if(*itr == obj)break;
 		}
 		this->obj.erase(itr);
 	}
+}
+
+Image* Window::getDisplay(){
+	return &this->display;
 }
 
 void Window::hide(){
@@ -168,19 +150,21 @@ bool Window::Initialize(){
 	
 	UpdateWindow(this->hWnd);
 
+	this->AddObject(&this->display);
+
 	return true;
 }
 //更新処理
 void Window::Update(){
 	for(int i=0 ; i < (signed)this->obj.size() ; i++){
-		this->obj.at(i)->Update();
+		this->obj.at(i)->Update(this->hWnd, this->hdc);
 	}
 }
 //描画処理
 void Window::Draw(){
 	
 	for(int i=0 ; i < (signed)this->obj.size() ; i++){
-		this->obj.at(i)->Draw();
+		this->obj.at(i)->Draw(this->hWnd, this->hdc);
 	}
 	//ウィンドウプロシージャに自分へのポインタを渡す。
 	SetWindowLongPtr(this->hWnd,GWL_USERDATA,(LONG)this);
@@ -190,7 +174,7 @@ void Window::Draw(){
 //削除処理
 void Window::Delete(){
 	for(int i=0 ; i < (signed)this->obj.size() ; i++){
-		this->obj.at(i)->Delete();
+		this->obj.at(i)->Delete(this->hWnd, this->hdc);
 	}
 	DeleteDC(this->hdc);
 	DestroyWindow(this->hWnd);

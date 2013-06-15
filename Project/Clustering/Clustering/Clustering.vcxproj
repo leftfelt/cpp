@@ -95,26 +95,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\CameraClass.cpp" />
-    <ClCompile Include="ClassifierClass.cpp" />
-    <ClCompile Include="ClusterRepository.cpp" />
-    <ClCompile Include="Converter.cpp" />
-    <ClCompile Include="fuzzyCMeansClassifierClass.cpp" />
-    <ClCompile Include="KMeansClassifierClass.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="PatternRepository.cpp" />
-    <ClCompile Include="RelationDataRepository.cpp" />
-    <ClCompile Include="Testament.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\include\CameraClass.h" />
-    <ClInclude Include="ClassifierClass.h" />
-    <ClInclude Include="ClusterRepository.h" />
-    <ClInclude Include="Converter.h" />
-    <ClInclude Include="fuzzyCMeansClassifierClass.h" />
-    <ClInclude Include="KMeansClassifierClass.h" />
-    <ClInclude Include="PatternRepository.h" />
-    <ClInclude Include="RelationDataRepository.h" />
-    <ClInclude Include="Testament.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
