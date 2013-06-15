@@ -1,0 +1,3 @@
+./libmakescript
+g++ -L../lib -I../include -std=c++0x -c ../Project/CrawlerClass/CrawlerClass/main.cpp
+g++ -L../lib -I../include -std=c++0x -o crawler.test.c++ main.o XMLClass.o HttpClass.o StringClass.o NetworkClass.o TagClass.o NumberClass.o NumberOperatorClass.o SocketClass.o

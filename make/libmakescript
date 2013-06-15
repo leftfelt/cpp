@@ -1,0 +1,12 @@
+g++ -I../include -std=c++0x -c ../src/AreaClass.cpp
+g++ -I../include -std=c++0x -c ../src/TagClass.cpp
+g++ -I../include -std=c++0x -c ../src/StringClass.cpp
+g++ -I../include -std=c++0x -c ../src/NumberClass.cpp
+g++ -I../include -std=c++0x -c ../src/NumberOperatorClass.cpp
+g++ -I../include -std=c++0x -c ../src/HttpClass.cpp
+g++ -I../include -std=c++0x -c ../src/NetworkClass.cpp
+g++ -I../include -std=c++0x -c ../src/SocketClass.cpp
+g++ -I../include -std=c++0x -c ../src/XMLClass.cpp
+g++ -I../include -std=c++0x -c ../src/MathClass.cpp
+g++ -I../include -std=c++0x -c ../src/PixelClass.cpp
+g++ -I../include -std=c++0x -c ../src/VectorClass.cpp

@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual C++ Express 2010
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SQLite3", "SQLite3\SQLite3.vcxproj", "{220CF46F-F44B-4632-9231-223A40C43CA5}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SQLite", "SQLite\SQLite.vcxproj", "{DC51DF8D-A89B-4B9F-81FE-0CE2EAF43556}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{220CF46F-F44B-4632-9231-223A40C43CA5}.Debug|Win32.ActiveCfg = Debug|Win32
+		{220CF46F-F44B-4632-9231-223A40C43CA5}.Debug|Win32.Build.0 = Debug|Win32
+		{220CF46F-F44B-4632-9231-223A40C43CA5}.Release|Win32.ActiveCfg = Release|Win32
+		{220CF46F-F44B-4632-9231-223A40C43CA5}.Release|Win32.Build.0 = Release|Win32
+		{DC51DF8D-A89B-4B9F-81FE-0CE2EAF43556}.Debug|Win32.ActiveCfg = Debug|Win32
+		{DC51DF8D-A89B-4B9F-81FE-0CE2EAF43556}.Debug|Win32.Build.0 = Debug|Win32
+		{DC51DF8D-A89B-4B9F-81FE-0CE2EAF43556}.Release|Win32.ActiveCfg = Release|Win32
+		{DC51DF8D-A89B-4B9F-81FE-0CE2EAF43556}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

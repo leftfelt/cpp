@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual C++ Express 2010
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NetworkClass", "NetworkClass\NetworkClass.vcxproj", "{2B195952-B035-4CA9-A529-90C98C4A41E0}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Server", "Server\Server.vcxproj", "{B1C5C94C-813A-495C-B51D-2AF8C9D86A27}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2B195952-B035-4CA9-A529-90C98C4A41E0}.Debug|Win32.ActiveCfg = Debug|Win32
+		{2B195952-B035-4CA9-A529-90C98C4A41E0}.Debug|Win32.Build.0 = Debug|Win32
+		{2B195952-B035-4CA9-A529-90C98C4A41E0}.Release|Win32.ActiveCfg = Release|Win32
+		{2B195952-B035-4CA9-A529-90C98C4A41E0}.Release|Win32.Build.0 = Release|Win32
+		{B1C5C94C-813A-495C-B51D-2AF8C9D86A27}.Debug|Win32.ActiveCfg = Debug|Win32
+		{B1C5C94C-813A-495C-B51D-2AF8C9D86A27}.Debug|Win32.Build.0 = Debug|Win32
+		{B1C5C94C-813A-495C-B51D-2AF8C9D86A27}.Release|Win32.ActiveCfg = Release|Win32
+		{B1C5C94C-813A-495C-B51D-2AF8C9D86A27}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
