@@ -45,8 +45,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>C:\LeftFelt\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\LeftFelt\lib;C:\OpenCV2.4\build\x86\vc10\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\LeftFelt\include;C:\LeftFelt\lib\LeftFelt\LeftFelt\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\LeftFelt\lib\LeftFelt\LeftFelt\lib;C:\OpenCV2.4\build\x86\vc10\lib;$(LibraryPath)</LibraryPath>
     <SourcePath>C:\LeftFelt\src;$(SourcePath)</SourcePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -83,12 +83,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\src\biImageClass.cpp" />
     <ClCompile Include="..\..\..\src\CameraClass.cpp" />
-    <ClCompile Include="..\..\..\src\ImageClass.cpp" />
-    <ClCompile Include="..\..\..\src\KeyClass.cpp" />
-    <ClCompile Include="..\..\..\src\ObjectClass.cpp" />
-    <ClCompile Include="..\..\..\src\WindowClass.cpp" />
     <ClCompile Include="main-template.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
@@ -97,12 +92,7 @@
     <ClCompile Include="SensorBarLogicClass.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\include\biImageClass.h" />
     <ClInclude Include="..\..\..\include\CameraClass.h" />
-    <ClInclude Include="..\..\..\include\ImageClass.h" />
-    <ClInclude Include="..\..\..\include\KeyClass.h" />
-    <ClInclude Include="..\..\..\include\ObjectClass.h" />
-    <ClInclude Include="..\..\..\include\WindowClass.h" />
     <ClInclude Include="SensorBarLogicClass.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

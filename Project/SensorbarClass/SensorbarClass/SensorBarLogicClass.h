@@ -1,15 +1,15 @@
 #ifdef _DEBUG
-	#pragma comment(lib,"Based.lib")
-	#pragma comment(lib,"Flibd.lib")
-	#pragma comment(lib,"Flib_wind.lib")
+	#pragma comment(lib,"based.lib")
+	#pragma comment(lib,"guid.lib")
+	#pragma comment(lib,"image_utild.lib")
 #else
-	#pragma comment(lib,"Base.lib")
-	#pragma comment(lib,"Flib.lib")
-	#pragma comment(lib,"Flib_win.lib")
+	#pragma comment(lib,"base.lib")
+	#pragma comment(lib,"gui.lib")
+	#pragma comment(lib,"image_util.lib")
 #endif
 
-#include <ImageUtilClass.h>
-#include <SquareClass.h>
+#include <image_util/ImageUtilClass.h>
+#include <gui/SquareClass.h>
 #include <algorithm>
 
 namespace SensorBarLogic{

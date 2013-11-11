@@ -42,22 +42,24 @@ void main(){
 
 	std::cout << Math::average(v1) << std::endl;
 	std::cout << Math::variance(v1) << std::endl;
-
-	std::mt19937 rng;
+	
+    std::random_device rd;
+	std::mt19937 rng(rd());
 
 	std::cout << bar << std::endl;
+
 	for(int i=0 ; i<10 ; i++){
-		std::cout << Math::generateRandomNumber(-1000, 1000, rng) << std::endl;
+		std::cout << std::generate_canonical<double, 10>(rng) << std::endl;
 	}
 	
 	std::cout << bar << std::endl;
-	srand((unsigned int)time(NULL));
+
 	for(int i=0 ; i<10 ; i++){
 		std::cout << Math::generateUniform(rng) << std::endl;
 	}
 
 	std::cout << bar << std::endl;
-	srand((unsigned int)time(NULL));
+
 	for(int i=0 ; i<10 ; i++){
 		std::cout << Math::generateRandomNumber(-1, 1, rng) / pow(10.0, Math::generateRandomNumber(0, 6, rng)) << std::endl;
 	}

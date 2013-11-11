@@ -17,7 +17,7 @@ public:
 		frame = 0;
 		angle = 0;
 		this->createWindow("main");
-		wnd->Size(640,480);
+		wnd->setSize(640,480);
 
 		load = new biImage();
 		ImageUtil::Load(*load,"../../../data/color.bmp");
