@@ -89,12 +89,14 @@ public:
 	
 		//ラプラシアンフィルタ(TODO 用修正)
 		*test = *load;
+		//ImageUtil::toGrayScale(*test);
 		ImageUtil::Laplacian(*test);
 		//*test += Pixel(128);
 		background->Paste(width*4,0,*test);
 	
 		//ゾーベルフィルタ
 		*test = *load;
+		//ImageUtil::toGrayScale(*test);
 		ImageUtil::Sobel(*test);
 		background->Paste(width*5,0,*test);
 		
@@ -250,6 +252,18 @@ public:
 		});
 		background->Paste(0,height*4,*test);
 
+		
+		*test = *load;
+		ImageUtil::Gaussian(*test, 1);
+		background->Paste(width,height*4,*test);
+
+
+		*test = *load;
+		ImageUtil::Harris(*test, 1, 5);
+		background->Paste(width*2,height*4,*test);
+		
+		//=====================================================
+		
 		img->Paste(0,0,*background);
 	}
 };

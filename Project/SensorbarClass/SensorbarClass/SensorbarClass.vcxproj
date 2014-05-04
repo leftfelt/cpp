@@ -39,8 +39,8 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>C:\LeftFelt\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\LeftFelt\lib;C:\OpenCV2.4\build\x86\vc10\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\LeftFelt\include;C:\LeftFelt\lib\LeftFelt\LeftFelt\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\LeftFelt\lib\LeftFelt\LeftFelt\lib;C:\OpenCV2.4\build\x86\vc10\lib;$(LibraryPath)</LibraryPath>
     <SourcePath>C:\LeftFelt\src;$(SourcePath)</SourcePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">

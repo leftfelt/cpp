@@ -85,6 +85,7 @@
     <ClCompile Include="..\..\..\..\src\ThinkGearClass.cpp" />
     <ClCompile Include="..\..\mdt-r2_1_2\MindSet Development Tools\ThinkGear Communications Driver\win32\thinkgear_testapp.c">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="main.cpp" />
   </ItemGroup>

@@ -11,7 +11,6 @@
 class biImage{
 protected:
 	std::vector<Pixel> mimage;//画像
-	bool flag;	//オペレータ用
 private:
 	Pixel clearColor; //透明色
 	int width;
@@ -43,7 +42,7 @@ public:
 	Pixel Get(int x,int y);//ピクセルの色を取得(1バイト目:R 2バイト目:G 3バイト目:B 4バイト目:LABEL)
 	//=========================================================================
 	//=演算子(Copy)
-	biImage operator=(const biImage &image);
+	//biImage operator=(const biImage &image);
 	biImage operator=(Pixel pixel);
 	biImage operator+(biImage &image);
 	biImage operator-(biImage &image);

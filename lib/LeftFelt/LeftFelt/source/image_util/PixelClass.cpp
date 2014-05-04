@@ -56,9 +56,14 @@ Pixel Pixel::operator*(Pixel &pixel){
 	return *this;
 }
 Pixel Pixel::operator/(Pixel &pixel){
-	this->Red( Math::limit(this->Red() / pixel.Red(),0,255) );
-	this->Green( Math::limit(this->Green() / pixel.Green(),0,255) );
-	this->Blue( Math::limit(this->Blue() / pixel.Blue(),0,255) );
+	if(pixel.Red() == 0) this->Red(0);
+	else this->Red( Math::limit(this->Red() / pixel.Red(),0,255) );
+
+	if(pixel.Green() == 0) this->Green(0);
+	else this->Green( Math::limit(this->Green() / pixel.Green(),0,255) );
+
+	if(pixel.Blue() == 0) this->Blue(0);
+	else this->Blue( Math::limit(this->Blue() / pixel.Blue(),0,255) );
 	return *this;
 }
 

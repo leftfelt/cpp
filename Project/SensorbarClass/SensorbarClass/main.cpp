@@ -26,6 +26,7 @@ private:
 	biImage *background;
 	biImage *prev;
 	biImage *temp;
+	PointList prev_nodes;
 	Camera camera;
 	Mouse *mouse;
 public:
@@ -55,35 +56,36 @@ public:
 	void main(){
 		int base = 130;
 		SensorBarLogic::Hand hand;
+		biImage display;
 
 		//カメラから取り込み
+		*prev = *background;
 		*background = camera.Image();
 		*temp = *background;
+		display = *background;
+		
+		//特徴点抽出
+		prev_nodes = ImageUtil::Harris(SensorBarLogic::getWorkImage(*prev), 0.5, 5);
+		std::vector<Point> curr_nodes = ImageUtil::Harris(SensorBarLogic::getWorkImage(*background), 0.5, 5);
 
-		temp->Size(
-			WIDTH*SensorBarLogic::Work_Image_Percent,
-			HEIGHT*SensorBarLogic::Work_Image_Percent
-		); //全体的に処理が重いので画像サイズを小さくする
+		std::vector<SensorBarLogic::Feature> optical_flow = SensorBarLogic::getOpticalFlow(SensorBarLogic::getWorkImage(*prev), SensorBarLogic::getWorkImage(*background), prev_nodes, curr_nodes, 5);
+		SensorBarLogic::drawOpticalFlow(display, optical_flow);
 
+		//ImageUtil::Harris(display, 0.5, 5);
+
+		/*
 		//明るさ調整
-		//ImageUtil::Brightness(*temp,base);
-		//*background = *temp;
+		ImageUtil::Brightness(*temp,base);
+
 		SensorBarLogic::Range(*temp);//肌色抽出
 
-		//*細線化処理し、特徴点を抽出する
+		//細線化処理し、特徴点を抽出する
 		hand = SensorBarLogic::SamplingHand(*temp);
-		SensorBarLogic::DrawPointList(*temp,hand,*background);
-		//*background = *temp;
-
-		//タイトルバーにマウス座標を表示する*/
-		String str = "";
-		str += (String)"x=" + (Number)mouse->Pos().x;
-		str += (String)" y=" + (Number)mouse->Pos().y;
-
-		this->window->setTitle(str.c_str());
-		
-		img->Paste(0,0,*background);
+		SensorBarLogic::DrawPointList(*temp,hand,display);
 		//*/
+
+		//display = *temp;
+		img->Paste(0,0,display);
 	}
 };
 

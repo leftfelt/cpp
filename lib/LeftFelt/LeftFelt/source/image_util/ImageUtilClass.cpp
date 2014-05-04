@@ -1,5 +1,16 @@
 #include <image_util/ImageUtilClass.h>
 
+float ImageUtil::laplacian_filter[9] = {-1,-1,-1, -1, 8,-1, -1,-1,-1};
+
+float ImageUtil::Gaussian(int x, int y, float sigma){
+	return 1.0/(2.0*Math::Pi*sigma) * exp( -(pow((float)x, 2)+pow((float)y, 2))/(2.0*pow((float)sigma, 2)) );
+}
+
+//1回微分ガウシアン
+float ImageUtil::derivativesGaussian(int x, int y, float sigma){
+	return (float)(-x)/(2.0*Math::Pi*pow((float)sigma, 4)) * exp( -(pow((float)x, 2)+pow((float)y, 2))/(2.0*pow((float)sigma, 2)) );
+}
+
 /**
  * ぼやけ度を取得する
  * param biImage image
@@ -563,6 +574,14 @@ int ImageUtil::Binarize(biImage &image, int threshold){
 	return ret;
 
 }
+
+//グレイスケールに変換
+void ImageUtil::toGrayScale(biImage &image){
+	biImage::for_each(image,[&](int x, int y){
+		image.Put(x, y, image.Get(x, y).Lightness());
+	});
+}
+
 //傾きをかける
 void ImageUtil::Incline(biImage &image, double R,double G,double B){
 	
@@ -581,6 +600,38 @@ void ImageUtil::Incline(biImage &image, double R,double G,double B){
 	}
 }
 
+void ImageUtil::filtering(biImage &image, float *filter, int filter_size[2], int direction[2]){
+	biImage temp = image;
+	int i, j, height = image.Height(), width = image.Width();
+	for(j = 0 ; j < height ; j++){
+		for(i = 0 ; i < width ; i++){
+			temp.Put(i,j,fabs(ImageUtil::convolution(image, filter, i, j, filter_size, direction)));
+		}
+	}
+	image = temp;
+}
+
+float ImageUtil::convolution(biImage &image, float *filter, int x, int y, int filter_size[2], int direction[2]){
+	float pixel = 0;
+	int i, ix, iy, iwidth = filter_size[0]*direction[0]*direction[1];
+	//x方向
+	for(i = 0 ; i < filter_size[0]*direction[0] ; i++){
+		ix = i*direction[0];
+		iy = i*direction[1];
+		pixel += (float)image.Get(x+ix,y+iy).Lightness() * filter[i+i*iwidth];
+	}
+	//y方向
+	for(i = 0 ; i < filter_size[1]*direction[1] ; i++){
+		ix = i*direction[1];
+		iy = i*direction[0];
+		pixel += (float)image.Get(x+ix,y+iy).Lightness() * filter[i+i*iwidth];
+	}
+
+	return pixel;
+}
+//*/
+
+
 //ゾーベルフィルタ
 void ImageUtil::Sobel(biImage &image){
 	int width, height, graylevel;
@@ -594,59 +645,98 @@ void ImageUtil::Sobel(biImage &image){
 	height = image.Height();
 	graylevel = 255;
 
+	float filter_y[9] = {1, 2, 1, 0, 0, 0, -1, -2, -1};
+	float filter_x[9] = {1, 0, -1, 2, 0, -2, 1, 0, -1};
+	int filter_size[2] = {3, 3};
+	int direction_x[2] = {1,1};
+	int direction_y[2] = {1,1};
+
 	//カラー画像を二値化
 	//auto_niti(&outimage);
 	
 	//Sobelフィルター
 	for(int j = 0 ; j < height ; j++){
 		for(int i = 0 ; i < width ; i++){
-			pos = 0;
-			//近傍領域の値を取得
-			for(int l = -1 ; l <= 1 ; l++){//k
-				for(int k = -1; k <= 1 ; k++){//j
-					pos = i+(j+l)*width;
-					if((pos/width) == 0 || (pos/width) >= height-1 || (pos%width) == 0 || (pos-(width-1))%width == 0){
-						num[(k+1)+(l+1)*3] = 0;
-					}else{
-						num[(k+1)+(l+1)*3] = outimage.Get(i,j+l).Lightness();
-					}
-				}
-			}
 			
-			dx = num[0] + 2*num[3] + num[6];
-			dx = dx - num[2] - 2*num[5] - num[8];
-			dy = num[0] + 2*num[1] + num[2];
-			dy = dy - num[6] - 2*num[7] - num[8];
+			dx = ImageUtil::convolution(image, filter_x, i, j, filter_size,direction_x);
+			dy = ImageUtil::convolution(image, filter_y, i, j, filter_size,direction_y);
 
 			gray = abs(dx)+abs(dy);
 
 			if(gray > graylevel) gray = graylevel;
-			image.Put(i,j,Pixel(gray));
+			outimage.Put(i,j,Pixel(gray));
 		}
 	}
+	image = outimage;
 }
 
 // ラプラシアンフィルタ
 void ImageUtil::Laplacian(biImage &image){
-	Pixel pixel;
-	biImage temp;
-	int mask[9] = {
-		-1,-1,-1,
-		-1, 8,-1,
-		-1,-1,-1};
-	temp = image;
-	for(int j = 1 ; j < image.Height()-1 ; j++){
-		for(int i = 1 ; i < image.Width()-1 ; i++){
-			pixel.setRGB(0,0,0);
-			for(int k = 0 ; k < 9 ; k++){
-				pixel += image.Get(i+(k%3-1),j+(k/3-1)) * mask[k];
-			}
-			temp.Put(i,j,pixel);
-		}
-	}
-	image = temp;
+	int filter_size[2] = {3, 3};
+	int direction[2] = {1,1};
+	ImageUtil::filtering(image, ImageUtil::laplacian_filter, filter_size, direction);
 }
 
+//ガウシアンフィルタ
+void ImageUtil::Gaussian(biImage &image, float sigma){
+	float gaussian_filter[9];
+	int ix = 0, iy = 0;
+	int filter_size[2] = {3, 3};
+	int direction[2] = {1,1};
+
+	for(int i = 0 ; i < 9 ; i++){
+		ix = i%3-1;
+		iy = i/3-1;
+		gaussian_filter[i] = ImageUtil::Gaussian(ix, iy, sigma);
+	}
+
+	ImageUtil::filtering(image, gaussian_filter,filter_size, direction);
+}
+
+PointList ImageUtil::Harris(biImage &image, float sigma, float threshold){
+	PointList point_list;
+	float gaussian_x[3], gaussian[9];
+	int ix = 0, iy = 0;
+	int filter_size[2] = {3, 3};
+	int direction[2] = {1,1};
+	int direction_x[2] = {1,0};
+	int direction_y[2] = {0,1};
+
+	biImage imx = image, imy = image;
+	
+	for(int i = 0 ; i < 3 ; i++){
+		gaussian_x[i] = ImageUtil::derivativesGaussian(i-1, 0, sigma);
+	}
+
+	for(int i = 0 ; i < 9 ; i++){
+		ix = i%3-1;
+		iy = i/3-1;
+		gaussian[i] = ImageUtil::Gaussian(ix, iy, sigma);
+	}
+
+	ImageUtil::filtering(imx, gaussian_x,filter_size, direction_x);
+	ImageUtil::filtering(imy, gaussian_x,filter_size, direction_y);
+
+	//
+	biImage Wxx = imx * imx, Wxy = imx * imy, Wyy = imy * imy;
+	ImageUtil::filtering(Wxx, gaussian,filter_size,direction);
+	ImageUtil::filtering(Wxy, gaussian,filter_size,direction);
+	ImageUtil::filtering(Wyy, gaussian,filter_size,direction);
+
+	//unsigned char以上の型で計算できるようにする
+	biImage Wdet = Wxx*Wyy - Wxy*2, Wtr = Wxx + Wyy;
+
+	biImage::for_each(Wdet,[&](int x, int y){
+		float pixel = (((float)Wdet.Get(x,y).Lightness() / (float)Wtr.Get(x,y).Lightness()));
+		if(threshold <= pixel){
+			image.Put(x,y, 255);
+			point_list.push_back(Point(x,y));
+		}
+	});
+
+	//image = Wxy;
+	return point_list;
+}
 
 //ノイズ除去
 void ImageUtil::AntiNoise(biImage &image,unsigned int level){

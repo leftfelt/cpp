@@ -31,8 +31,13 @@ typedef struct SurfFeature{
 
 class ImageUtil{
 private:
+	float static laplacian_filter[9];
 	int static min_calc(int *p);
 	int static Lookup_update(int i,int * label);
+	void static filtering(biImage &image, float *filter, int filter_size[2], int direction[2]);
+	float static convolution(biImage &image, float *filter, int x, int y, int filter_size[2], int direction[2]);
+	float static derivativesGaussian(int x, int y, float sigma); //1回微分ガウシアン
+	float static Gaussian(int x, int y, float sigma);
 public:
 	void static Shrink(biImage &image);//白領域を圧縮
 	void static Expand(biImage &image);//白領域を膨張
@@ -46,10 +51,13 @@ public:
 	void static colorRegionSplit(biImage &image, int threshold = 100);//色領域分割
 	void static getHistogram(biImage &image, int *histogram);
 	int static getThreshold(biImage &image);//判別分析法
+	void static toGrayScale(biImage &image);//グレイスケールに変換
 	int static Binarize(biImage &image, int threshold = -1);//二値化
 	void static Incline(biImage &image, double R,double G,double B);//傾きをかける
 	void static Sobel(biImage &image);//ゾーベルフィルタ
 	void static Laplacian(biImage &image);//ラプラシアンフィルタ
+	void static Gaussian(biImage &image, float sigma);//ガウシアンフィルタ
+	PointList static Harris(biImage &image, float sigma = 1, float threshold = 0.1);
 	void static AntiNoise(biImage &image, unsigned int level = 1);//ノイズ除去
 	void static Contrast(biImage &image);//コントラスト改善
 	void static YIQRange(biImage &image, int Ylow, int Yhigh,int Ilow = 0, int Ihigh = 0, int Qlow = 0, int Qhigh = 0);//色抽出
@@ -74,6 +82,7 @@ public:
 	void static toCvImage(IplImage **cv_image, biImage &image); //OpenCV用に変換
 	void static fromCvImage(biImage &image, IplImage *cv_image); //OpenCVから変換
 	std::vector<SurfFeature> static getSurf(biImage &image, double threshold);
+	void static costomBinalize(biImage &image, Pixel attention, Pixel sigma); // <-- TODO:名前適当だからかえる！
 };
 
 #endif

@@ -46,19 +46,19 @@ void Image::Initialize(HWND hWnd, HDC hdc){
 
 void Image::Update(HWND hWnd, HDC hdc){
 	
-	int i,j;
+	int i,j, pos;
 	int width = Width();
 	int height = Height();
 	
 	//画素をコピー
 	for(j = 0 ; j < height ; j++){
 		for(i = 0 ; i < width ; i++){
-			if(j < height &&  i < width){//サイズが超えてないか
-				(bits+i+(height-1-j)*width)->rgbBlue		 = mimage.at(i+j*width).Blue();
-				(bits+i+(height-1-j)*width)->rgbGreen		 = mimage.at(i+j*width).Green();
-				(bits+i+(height-1-j)*width)->rgbRed			 = mimage.at(i+j*width).Red();
-				(bits+i+(height-1-j)*width)->rgbReserved	 = 0;
-			}
+			Pixel pixel = mimage.at(i+j*width);
+			pos = i+(height-1-j)*width;
+			(bits+pos)->rgbBlue		 = pixel.Blue();
+			(bits+pos)->rgbGreen	 = pixel.Green();
+			(bits+pos)->rgbRed		 = pixel.Red();
+			(bits+pos)->rgbReserved	 = 0;
 		}
 	}
 }

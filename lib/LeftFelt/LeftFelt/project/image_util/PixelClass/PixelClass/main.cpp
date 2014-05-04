@@ -2,7 +2,7 @@
 #include <image_util/PixelClass.h>
 
 void main(){
-	Pixel a,b,c,d;
+	Pixel<> a,b,c,d;
 
 	a.setRGB(100,150,200);
 	b.setRGB(10,20,30);

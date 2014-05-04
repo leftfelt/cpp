@@ -11,9 +11,10 @@
 #include <image_util/ImageUtilClass.h>
 #include <gui/SquareClass.h>
 #include <algorithm>
+#include <queue>
 
 namespace SensorBarLogic{
-	const double Work_Image_Percent = 0.5; //作業画像の比率
+	const double Work_Image_Percent = 0.50; //作業画像の比率
 
 	//手のデータクラス
 	class Hand{
@@ -24,18 +25,28 @@ namespace SensorBarLogic{
 	};
 	class Feature{
 		public:
-			double bulr; //ぼやけ度
-			double area; //面積比
-			int point_num; //特徴点の数
-			PointList point_list;
-			//一致率を取得する
-			double getMatchRate(Feature feature);
-			//類似度を取得する
-			Feature operator*(Feature feature);
+			int angle;
+			double speed;
+			Point prev;
+			Point curr;
 	};
 
+	class CongruentNode{
+		public:
+			int score;
+			int index;
+			CongruentNode(int score, int index);
+			bool operator<(const CongruentNode &node) const;
+	};
+
+
+	biImage getWorkImage(const biImage &image);
 	void Range(biImage &image);//HSV肌色抽出
 	Hand SamplingHand(biImage &image);//*細線化処理し、特徴点を抽出する
 	Point getCenterPoint(PointList point_list);//中心点を取得する
 	void DrawPointList(biImage &image, Hand hand, biImage &output);
+
+	std::vector<Feature> getOpticalFlow(biImage prev_image, biImage curr_image, PointList prev_nodes, PointList curr_nodes, int find_range);
+	void drawOpticalFlow(biImage &image, std::vector<Feature> optical_flow);
+	
 }

@@ -28,7 +28,6 @@ biImage::biImage(int width, int height){
 }
 //コピーコンストラクタ
 biImage::biImage(const biImage &image){
-	if(this->flag == true)this->flag = false;
 	mimage = image.mimage;
 	this->clearColor = image.clearColor;
 	this->width =image.width;
@@ -36,14 +35,10 @@ biImage::biImage(const biImage &image){
 }
 //デストラクタ
 biImage::~biImage(){
-	if(flag == true){//仮生成されていたら削除
-		Delete();
-	}
 }
 
 void biImage::init(){
 	clearColor = Pixel();
-	flag = false;
 
 	height = 0;
 	width = 0;
@@ -87,8 +82,6 @@ biImage biImage::Cut(int x, int y, int width, int height){
 	biImage::for_each(ret,[&](int i, int j){
 		ret.Put(i,j,this->Get((x+i),(y+j)));
 	});
-
-	ret.flag = true;
 
 	return ret;
 }
@@ -141,7 +134,6 @@ void biImage::Size(int width ,int height ){
 	});
 	image.Clear(this->clearColor);
 	*this = image;
-	image.Delete();
 }
 
 biImage biImage::Rotate(int angle){//回転
@@ -165,33 +157,10 @@ biImage biImage::Rotate(int angle){//回転
 }
 
 //演算子===========================================================================
-biImage biImage::operator=(const biImage& image){
-	//ここだけはconstがついているのでimageはWidth(),Height()が使えない
-	if(this->Width() < image.width || this->Height() < image.height
-		|| mimage.empty()){
-		Delete();
-		this->Create(image.width,image.height);
-	}else{
-		this->width = image.width;
-		this->height = image.height;
-	}
-
-	this->clearColor = image.clearColor;
-
-	//画素の内容をコピー
-	biImage::for_each(*this,[&](int i, int j){
-		mimage.at(i+j*this->Width()) = image.mimage.at(i+j*image.width);
-	});
-
-	return *this;
-}
-
 biImage biImage::operator=(Pixel pixel){
 	
 	//すべての画素をvalueにする
-	biImage::for_each(*this,[&](int i, int j){
-		this->Put(i,j,pixel);
-	});
+	std::fill(this->mimage.begin(), this->mimage.end(), pixel);
 	
 	return  *this;
 }
@@ -200,7 +169,6 @@ biImage biImage::operator=(Pixel pixel){
 biImage biImage::operator+(biImage &image){
 	biImage temp;
 
-	temp.flag = true;
 	temp = *this;
 	temp += image;
 	
@@ -210,7 +178,6 @@ biImage biImage::operator+(biImage &image){
 biImage biImage::operator-(biImage &image){
 	biImage temp;
 
-	temp.flag = true;
 	temp = *this;
 	temp -= image;
 	
@@ -219,7 +186,6 @@ biImage biImage::operator-(biImage &image){
 biImage biImage::operator*(biImage &image){
 	biImage temp;
 
-	temp.flag = true;
 	temp = *this;
 	temp *= image;
 	
@@ -228,7 +194,6 @@ biImage biImage::operator*(biImage &image){
 biImage biImage::operator/(biImage &image){
 	biImage temp;
 
-	temp.flag = true;
 	temp = *this;
 	temp /= image;
 	
@@ -238,7 +203,6 @@ biImage biImage::operator/(biImage &image){
 biImage biImage::operator+(Pixel pixel){
 	biImage temp;
 
-	temp.flag = true;
 	temp = *this;
 	temp += pixel;
 	
@@ -248,7 +212,6 @@ biImage biImage::operator+(Pixel pixel){
 biImage biImage::operator-(Pixel pixel){
 	biImage temp;
 
-	temp.flag = true;
 	temp = *this;
 	temp -= pixel;
 	
@@ -257,7 +220,6 @@ biImage biImage::operator-(Pixel pixel){
 biImage biImage::operator*(Pixel pixel){
 	biImage temp;
 
-	temp.flag = true;
 	temp = *this;
 	temp *= pixel;
 	
@@ -266,7 +228,6 @@ biImage biImage::operator*(Pixel pixel){
 biImage biImage::operator/(Pixel pixel){
 	biImage temp;
 
-	temp.flag = true;
 	temp = *this;
 	temp /= pixel;
 	
@@ -277,16 +238,14 @@ biImage biImage::operator+=(biImage &image){	//お互いの画素を足す
 	int width,height;
 
 	//サイズが小さいほうにあわせる
-	if(this->Width() > image.Width()) width = image.Width();
-	else width = this->Width();
-
-	if(this->Height() > image.Height()) height = image.Height();
-	else height = this->Height();
-
-	biImage::for_each(*this,[&](int i, int j){
-		this->mimage.at(i+j*this->Width()) = this->mimage.at(i+j*this->Width()) + image.mimage.at(i+j*image.Width());
-	});
-
+	width = (this->Width() > image.Width()) ? image.Width() : this->Width();
+	height = (this->Height() > image.Height()) ? image.Height() : this->Height();
+	
+	for(int j = 0 ; j < height ; j++){
+		for(int i = 0 ; i < width ; i++){
+			this->mimage.at(i+j*width) = this->mimage.at(i+j*width) + image.mimage.at(i+j*width);
+		}
+	}
 
 	return *this;
 }
@@ -294,33 +253,33 @@ biImage biImage::operator+=(biImage &image){	//お互いの画素を足す
 
 biImage biImage::operator-=(biImage &image){	//お互いの画素を引く
 	int width,height;
-	
+
 	//サイズが小さいほうにあわせる
-	if(this->Width() > image.Width()) width = image.Width();
-	else width = this->Width();
+	width = (this->Width() > image.Width()) ? image.Width() : this->Width();
+	height = (this->Height() > image.Height()) ? image.Height() : this->Height();
 
-	if(this->Height() > image.Height()) height = image.Height();
-	else height = this->Height();
+	for(int j = 0 ; j < height ; j++){
+		for(int i = 0 ; i < width ; i++){
+			this->mimage.at(i+j*width) = this->mimage.at(i+j*width) - image.mimage.at(i+j*width);
+		}
+	}
 
-	biImage::for_each(*this,[&](int i, int j){
-		this->mimage.at(i+j*this->Width()) = this->mimage.at(i+j*this->Width()) - image.mimage.at(i+j*image.Width());
-	});
 	return *this;
 }
 
 biImage biImage::operator*=(biImage &image){	//お互いの画素を掛ける
 	int width,height;
-	
+
 	//サイズが小さいほうにあわせる
-	if(this->Width() > image.Width()) width = image.Width();
-	else width = this->Width();
+	width = (this->Width() > image.Width()) ? image.Width() : this->Width();
+	height = (this->Height() > image.Height()) ? image.Height() : this->Height();
 
-	if(this->Height() > image.Height()) height = image.Height();
-	else height = this->Height();
+	for(int j = 0 ; j < height ; j++){
+		for(int i = 0 ; i < width ; i++){
+			this->mimage.at(i+j*width) = this->mimage.at(i+j*width) * image.mimage.at(i+j*width);
+		}
+	}
 
-	biImage::for_each(*this,[&](int i, int j){
-		this->mimage.at(i+j*this->Width()) = this->mimage.at(i+j*this->Width()) * image.mimage.at(i+j*image.Width());
-	});
 	return *this;
 }
 
@@ -329,15 +288,15 @@ biImage biImage::operator/=(biImage &image){	//お互いの画素を割る
 	int width,height;
 
 	//サイズが小さいほうにあわせる
-	if(this->Width() > image.Width()) width = image.Width();
-	else width = this->Width();
+	width = (this->Width() > image.Width()) ? image.Width() : this->Width();
+	height = (this->Height() > image.Height()) ? image.Height() : this->Height();
 
-	if(this->Height() > image.Height()) height = image.Height();
-	else height = this->Height();
+	for(int j = 0 ; j < height ; j++){
+		for(int i = 0 ; i < width ; i++){
+			this->mimage.at(i+j*width) = this->mimage.at(i+j*width) / image.mimage.at(i+j*width);
+		}
+	}
 
-	biImage::for_each(*this,[&](int i, int j){
-		this->mimage.at(i+j*this->Width()) = this->mimage.at(i+j*this->Width()) / image.mimage.at(i+j*image.Width());
-	});
 	return *this;
 }
 

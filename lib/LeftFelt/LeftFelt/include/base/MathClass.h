@@ -31,8 +31,8 @@ public:
 	template<typename T> static double cosSimilarity(std::vector<T> vector1, std::vector<T> vector2);
 	template<typename T> static double eucDistance(std::vector<T> vector1, std::vector<T> vector2);
 	static double distance(Point point1, Point point2);
-	template<typename T> static T average(std::vector<T> vector);
-	template<typename T> static T variance(std::vector<T> vector);
+	template<typename T> static double average(std::vector<T> vector);
+	template<typename T> static double variance(std::vector<T> vector);
 };
 
 template<typename T> double Math::Sin(T angle){
@@ -58,11 +58,12 @@ template<typename T> double Math::aTan(T num){
 template<typename T> T Math::limit(T num, T min, T max){
 	if(num > max){
 		return max;
-	}else if(num < min){
-		return min;
-	}else{
-		return num;
 	}
+	if(num < min){
+		return min;
+	}
+
+	return num;
 }
 
 //コサイン類似度
@@ -94,7 +95,7 @@ template<typename T> double Math::eucDistance(std::vector<T> vector1, std::vecto
 }
 
 //平均値
-template<typename T> T Math::average(std::vector<T> vector){
+template<typename T> double Math::average(std::vector<T> vector){
 	T sum;
 	for(int i = 0 ; i < (signed)vector.size() ; i++){
 		sum += vector[i];
@@ -103,11 +104,11 @@ template<typename T> T Math::average(std::vector<T> vector){
 }
 
 //分散
-template<typename T> T Math::variance(std::vector<T> vector){
-	T sum;
-	T average = Math::average(vector);
+template<typename T> double Math::variance(std::vector<T> vector){
+	double sum;
+	double average = Math::average(vector);
 	for(int i = 0 ; i < (signed)vector.size() ; i++){
-		T temp = vector[i] - average;
+		double temp = vector[i] - average;
 		sum += temp * temp;
 	}
 	return sum / (double)vector.size();
