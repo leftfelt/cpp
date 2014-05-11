@@ -36,11 +36,11 @@ public:
 		file_num = 10200;
 		//•ª—ÞŠíÝ’è
 		classifier_setting.cluster_size = 8;
-		classifier_setting.dimension_num = 128;
-		classifier_setting.classification_num = 30;
+		classifier_setting.dimension_num = 64;
+		classifier_setting.classification_num = 100;
 		classifier_setting.permissible_error = 0.001;
-		classifier_setting.data_min = -1;
-		classifier_setting.data_max = 1;
+		classifier_setting.data_min = -1.0;
+		classifier_setting.data_max = 1.0;
 		//•ÏŠ·ŠíÝ’è
 		setting.converter_setting.convert_image_threshold = 2000;
 		setting.converter_setting.sampling_rate = 100;
@@ -60,7 +60,7 @@ public:
 			this->learn(0, 8);
 			//*/
 			this->bench(0, 8);
-			//*/
+			//*/ 
 		}catch(std::exception e){
 			std::cout << e.what();
 		}

@@ -1079,7 +1079,7 @@ std::vector<SurfFeature> ImageUtil::getSurf(biImage &image, double threshold){
 	//toGray
 	cv::cvtColor(mat,grayImage,CV_BGR2GRAY);
 
-	cv::SURF calc_surf = cv::SURF(threshold);
+	cv::SURF calc_surf = cv::SURF(threshold,4,2,false);
 
 	std::vector<cv::KeyPoint> kp_vec;
 	std::vector<float> desc_vec;

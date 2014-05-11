@@ -7,9 +7,9 @@
 void main(){
 	int pattern_num = 100;
 	ClassifierSetting setting;
-	setting.classification_num = 10;
+	setting.classification_num = 10; //•ª—Ş‰ñ”
 	setting.permissible_error = 0.01;
-	setting.cluster_size = 10;
+	setting.cluster_size = 10; //•ª—Ş”
 	setting.data_max = pattern_num + pattern_num;
 	setting.data_min = 0;
 	setting.dimension_num = 2;

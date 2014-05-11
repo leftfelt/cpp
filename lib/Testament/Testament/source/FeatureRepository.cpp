@@ -54,11 +54,11 @@ void FeatureRepository::setup(){
 
 Feature FeatureRepository::getFeatureFromRowList(std::vector<Row> &row_list, int dimension_num){
 	Feature feature(dimension_num);
-	std::istringstream iss;
 
 	for(int i = 0 ; i < dimension_num ; i++){
-		iss.str(row_list[i]["data"]);
-		iss >> feature[i];
+		std::stringstream ss;
+		ss << row_list[i]["data"];
+		ss >> feature[i];
 	}
 
 	return feature;

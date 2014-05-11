@@ -11,9 +11,11 @@ std::vector<Pattern> Classifier::getRandomMiddleList(double min, double max, int
 	if(size==0) size = this->setting.cluster_size;
 
 	std::vector<Pattern> middle_list(size);
-	
-	std::mt19937 rng;
-	std::normal_distribution<double> dist(0.5, 1.0);
+	std::random_device seed_gen;
+	std::default_random_engine rng(seed_gen());
+	//std::mt19937 rng;
+
+	std::uniform_real_distribution<double> dist(min, max);
 
 	std::function<double()> generateRandomNumber = [&]()->double{
 		return dist(rng);

@@ -115,7 +115,13 @@ Dictionary DictionaryRepository::getDictionaryFromPatternList(std::vector<Dictio
 	}
 	return dictionary;
 }
-
+/**
+ * Ž«‘‚ðŽæ“¾‚·‚é
+ * @param int id
+ * @param int dictionary_size
+ * @param int pattern_size
+ * @return Dictionary
+ */
 Dictionary DictionaryRepository::find(int id, int dictionary_size, int pattern_size){
 	Dictionary dictionary;
 	for(int i = 0 ; i < dictionary_size ; i++){
