@@ -109,6 +109,7 @@
   <ItemGroup>
     <ClInclude Include="..\LeftFelt\include\base\AreaClass.h" />
     <ClInclude Include="..\LeftFelt\include\base\HttpClass.h" />
+    <ClInclude Include="..\LeftFelt\include\base\LogClass.h" />
     <ClInclude Include="..\LeftFelt\include\base\MathClass.h" />
     <ClInclude Include="..\LeftFelt\include\base\NetworkClass.h" />
     <ClInclude Include="..\LeftFelt\include\base\NumberClass.h" />

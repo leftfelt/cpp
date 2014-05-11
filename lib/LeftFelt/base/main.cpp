@@ -13,3 +13,4 @@
 #include <base/SocketClass.h>
 #include <base/TagClass.h>
 #include <base/XMLClass.h>
+#include <base/LogClass.h>

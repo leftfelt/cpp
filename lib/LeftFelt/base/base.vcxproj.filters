@@ -89,5 +89,8 @@
     <ClInclude Include="..\LeftFelt\include\base\XMLClass.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="..\LeftFelt\include\base\LogClass.h">
+      <Filter>ソース ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
