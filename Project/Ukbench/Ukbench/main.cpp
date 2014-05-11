@@ -37,7 +37,7 @@ public:
 		//•ª—ŞŠíİ’è
 		classifier_setting.cluster_size = 8;
 		classifier_setting.dimension_num = 64;
-		classifier_setting.classification_num = 100;
+		classifier_setting.classification_num = 30;
 		classifier_setting.permissible_error = 0.001;
 		classifier_setting.data_min = -1.0;
 		classifier_setting.data_max = 1.0;
