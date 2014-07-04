@@ -40,16 +40,16 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <LibraryPath>C:\LeftFelt\lib\b3band\mdt-r2_1_2\MindSet Development Tools\ThinkGear Communications Driver\win32;C:\LeftFelt\lib\LeftFelt\LeftFelt\lib;$(LibraryPath)</LibraryPath>
-    <SourcePath>C:\LeftFelt\src;C:\LeftFelt\lib\LeftFelt\LeftFelt\source;$(SourcePath)</SourcePath>
-    <IncludePath>C:\LeftFelt\include;C:\LeftFelt\lib\LeftFelt\LeftFelt\include;$(IncludePath)</IncludePath>
+    <SourcePath>C:\LeftFelt\lib\b3band\ThinkGear\source;C:\LeftFelt\lib\LeftFelt\LeftFelt\source;$(SourcePath)</SourcePath>
+    <IncludePath>C:\LeftFelt\lib\b3band\ThinkGear\include;C:\LeftFelt\lib\LeftFelt\LeftFelt\include;$(IncludePath)</IncludePath>
     <ReferencePath>$(ReferencePath)</ReferencePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <LibraryPath>C:\LeftFelt\lib\b3band\mdt-r2_1_2\MindSet Development Tools\ThinkGear Communications Driver\win32;C:\LeftFelt\lib\LeftFelt\LeftFelt\lib;$(LibraryPath)</LibraryPath>
     <ReferencePath>$(ReferencePath)</ReferencePath>
-    <SourcePath>C:\LeftFelt\src;C:\LeftFelt\lib\LeftFelt\LeftFelt\source;$(SourcePath)</SourcePath>
-    <IncludePath>C:\LeftFelt\include;C:\LeftFelt\lib\LeftFelt\LeftFelt\include;$(IncludePath)</IncludePath>
+    <SourcePath>C:\LeftFelt\lib\b3band\ThinkGear\source;C:\LeftFelt\lib\LeftFelt\LeftFelt\source;$(SourcePath)</SourcePath>
+    <IncludePath>C:\LeftFelt\lib\b3band\ThinkGear\include;C:\LeftFelt\lib\LeftFelt\LeftFelt\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -82,15 +82,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\src\ThinkGearClient.cpp" />
     <ClCompile Include="..\..\mdt-r2_1_2\MindSet Development Tools\ThinkGear Communications Driver\win32\thinkgear_testapp.c">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="..\source\ThinkGearClient.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\include\ThinkGearClient.h" />
+    <ClInclude Include="..\include\ThinkGearClient.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
