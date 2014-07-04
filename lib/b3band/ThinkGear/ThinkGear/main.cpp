@@ -4,16 +4,16 @@ int main(){
 	ThinkGearClient think_gear;
 	BrainWaves waves;
 
-	think_gear.Connect("COM4");
-	think_gear.StartCapture();
+	think_gear.connect("COM4");
+	think_gear.startCapture();
 	waves = think_gear.getWaves();
 	puts("Capture TEST");
 	for(int i = 0 ; i<100 ; i++){
 		printf("%f\n",waves.getRaw());
 	}
-	think_gear.StopCapture();
+	think_gear.stopCapture();
 	getchar();
-	think_gear.StartCapture();
+	think_gear.startCapture();
 	puts("getBattery TEST");
 	for(int i = 0 ; i<100 ; i++){
 		printf("%f\n",waves.getBattery());
@@ -84,6 +84,6 @@ int main(){
 		printf("%f\n",waves.getBlinkStrength());
 	}
 	getchar();
-	think_gear.StopCapture();
-	think_gear.DisConnect();
+	think_gear.stopCapture();
+	think_gear.disconnect();
 }

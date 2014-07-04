@@ -3,7 +3,7 @@
 ThinkGearClient::ThinkGearClient(){
 	this->connection_id = -1;
 	this->is_start_capture = false;
-	this->Create();
+	this->create();
 	this->waves_map["alpha1"]			= TG_DATA_ALPHA1;
 	this->waves_map["alpha2"]			= TG_DATA_ALPHA2;
 	this->waves_map["beta1"]			= TG_DATA_BETA1;
@@ -24,7 +24,7 @@ ThinkGearClient::~ThinkGearClient(){
 }
 
 //パケットの自動読み取りを有効にする
-int ThinkGearClient::EnableAutoRead(bool enabled){
+int ThinkGearClient::enableAutoRead(bool enabled){
 	int errCode;
 	errCode = TG_EnableAutoRead(this->connection_id, enabled);
 	if(errCode == -1){
@@ -43,7 +43,7 @@ bool ThinkGearClient::isStartCapture(){
 }
 
 //新しくIDを割り当てる。
-bool ThinkGearClient::Create(){
+bool ThinkGearClient::create(){
 	this->connection_id = TG_GetNewConnectionId();
     if( this->connection_id == -1 ) {
 		throw "too many Connections have been created without being freed by TG_FreeConnection()";
@@ -54,7 +54,7 @@ bool ThinkGearClient::Create(){
 }
 
 //指定したシリアルポートに接続を行い、IDと関連付ける
-int ThinkGearClient::Connect(std::string port_name, int bit_rate, int data_type){
+int ThinkGearClient::connect(std::string port_name, int bit_rate, int data_type){
 	int errCode;
 	std::string comPortName = "\\\\.\\";
     comPortName += port_name;
@@ -75,14 +75,14 @@ int ThinkGearClient::Connect(std::string port_name, int bit_rate, int data_type)
 }
 
 //IDが接続しているシリアル通信ポートから切断する
-void ThinkGearClient::DisConnect(){
+void ThinkGearClient::disconnect(){
 	//IDに関連付けられているすべてのメモリを開放する
 	TG_FreeConnection( this->connection_id );
 	TG_Disconnect(this->connection_id);
 }
 
-//読み取ったバイトををログファイルへ自動的に記録する
-int ThinkGearClient::StreamLog(std::string filename){
+//読み取ったバイトをログファイルへ自動的に記録する
+int ThinkGearClient::streamLog(std::string filename){
 	int errCode;
 	errCode = TG_SetStreamLog( this->connection_id, filename.c_str() );
 	if(errCode == -1){
@@ -94,7 +94,7 @@ int ThinkGearClient::StreamLog(std::string filename){
 }
 
 //解析データをログファイルへ自動的に記録する
-int ThinkGearClient::DataLog(std::string filename){
+int ThinkGearClient::dataLog(std::string filename){
 	int errCode;
 	errCode = TG_SetDataLog( this->connection_id, filename.c_str());
 	if(errCode == -1){
@@ -106,7 +106,7 @@ int ThinkGearClient::DataLog(std::string filename){
 }
 
 //指定したパケット数だけ読み取る
-int ThinkGearClient::ReadPackets(int packet_num){
+int ThinkGearClient::readPackets(int packet_num){
 	int read_packet_num;
 	read_packet_num = TG_ReadPackets( this->connection_id, packet_num );
 	if(read_packet_num == -1){
@@ -120,15 +120,15 @@ int ThinkGearClient::ReadPackets(int packet_num){
 }
 
 //パケットの読み取りを開始する
-void ThinkGearClient::StartCapture(){
+void ThinkGearClient::startCapture(){
 	this->is_start_capture = true;
-	this->EnableAutoRead(true);
+	this->enableAutoRead(true);
 }
 
 //パケットの読み取りを停止する
-void ThinkGearClient::StopCapture(){
+void ThinkGearClient::stopCapture(){
 	this->is_start_capture = false;
-	this->EnableAutoRead(false);
+	this->enableAutoRead(false);
 }
 
 //指定された定義済データ型の値を返す
