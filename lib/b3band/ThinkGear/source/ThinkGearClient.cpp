@@ -28,11 +28,11 @@ int ThinkGearClient::enableAutoRead(bool enabled){
 	int errCode;
 	errCode = TG_EnableAutoRead(this->connection_id, enabled);
 	if(errCode == -1){
-		throw "connectionId does not refer to a valid ThinkGearClient Connection ID handle";
+		throw std::exception("connectionId does not refer to a valid ThinkGearClient Connection ID handle");
 	}else if(errCode == -2){
-		throw "unable to enable background auto-reading";
+		throw std::exception("unable to enable background auto-reading");
 	}else if(errCode == -3){
-		throw "an error occurs while attempting to disable background auto-reading";
+		throw std::exception("an error occurs while attempting to disable background auto-reading");
 	}
 	return errCode;
 }
@@ -46,9 +46,9 @@ bool ThinkGearClient::isStartCapture(){
 bool ThinkGearClient::create(){
 	this->connection_id = TG_GetNewConnectionId();
     if( this->connection_id == -1 ) {
-		throw "too many Connections have been created without being freed by TG_FreeConnection()";
+		throw std::exception("too many Connections have been created without being freed by TG_FreeConnection()");
     }else if( this->connection_id == -2 ) {
-		throw "there is not enough free memory to allocate to a new ThinkGearClient Connection";
+		throw std::exception("there is not enough free memory to allocate to a new ThinkGearClient Connection");
 	}
 	return true;
 }
@@ -63,13 +63,13 @@ int ThinkGearClient::connect(std::string port_name, int bit_rate, int data_type)
                           TG_BAUD_9600, 
                           TG_STREAM_PACKETS );
 	if(errCode == -1){
-		throw "connectionId does not refer to a valid ThinkGearClient Connection ID handle";
+		throw std::exception("connectionId does not refer to a valid ThinkGearClient Connection ID handle");
 	}else if(errCode == -2){
-		throw "serialPortName could not be opened as a serial communication port for any reason. Check that the name is a valid COM port on your system";
+		throw std::exception("serialPortName could not be opened as a serial communication port for any reason. Check that the name is a valid COM port on your system");
 	}else if(errCode == -3){
-		throw "serialBaudrate is not a valid TG_BAUD_* value";
+		throw std::exception("serialBaudrate is not a valid TG_BAUD_* value");
 	}else if(errCode == -4){
-		throw "serialDataFormat is not a valid TG_STREAM_* type";
+		throw std::exception("serialDataFormat is not a valid TG_STREAM_* type");
 	}
     return errCode;
 }
@@ -86,9 +86,9 @@ int ThinkGearClient::streamLog(std::string filename){
 	int errCode;
 	errCode = TG_SetStreamLog( this->connection_id, filename.c_str() );
 	if(errCode == -1){
-		throw "connectionId does not refer to a valid ThinkGearClient Connection ID handle";
+		throw std::exception("connectionId does not refer to a valid ThinkGearClient Connection ID handle");
 	}else if(errCode == -2){
-		throw "filename could not be opened for writing. You may check errno for the reason";
+		throw std::exception("filename could not be opened for writing. You may check errno for the reason");
 	}
 	return errCode;
 }
@@ -98,9 +98,9 @@ int ThinkGearClient::dataLog(std::string filename){
 	int errCode;
 	errCode = TG_SetDataLog( this->connection_id, filename.c_str());
 	if(errCode == -1){
-		throw "connectionId does not refer to a valid ThinkGearClient Connection ID handle";
+		throw std::exception("connectionId does not refer to a valid ThinkGearClient Connection ID handle");
 	}else if(errCode == -2){
-		throw "filename could not be opened for writing. You may check errno for the reason";
+		throw std::exception("filename could not be opened for writing. You may check errno for the reason");
 	}
 	return errCode;
 }
@@ -110,11 +110,11 @@ int ThinkGearClient::readPackets(int packet_num){
 	int read_packet_num;
 	read_packet_num = TG_ReadPackets( this->connection_id, packet_num );
 	if(read_packet_num == -1){
-		throw "connectionId does not refer to a valid ThinkGearClient Connection ID handle";
+		throw std::exception("connectionId does not refer to a valid ThinkGearClient Connection ID handle");
 	}else if(read_packet_num == -2){
-		throw "there were not even any bytes available to be read from the Connection's serial communication stream";
+		throw std::exception("there were not even any bytes available to be read from the Connection's serial communication stream");
 	}else if(read_packet_num == -3){
-		throw "an I/O error occurs attempting to read from the Connection's serial communication stream";
+		throw std::exception("an I/O error occurs attempting to read from the Connection's serial communication stream");
 	}
 	return read_packet_num;
 }
