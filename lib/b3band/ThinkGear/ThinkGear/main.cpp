@@ -1,7 +1,7 @@
 #include <ThinkGearClient.h>
 
 int main(){
-	ThinkGear think_gear;
+	ThinkGearClient think_gear;
 	BrainWaves waves;
 
 	think_gear.Connect("COM4");
