@@ -39,31 +39,28 @@ public:
 		classifier_setting.dimension_num = 64;
 		classifier_setting.classification_num = 30;
 		classifier_setting.permissible_error = 0.001;
-		classifier_setting.data_min = -1.0;
-		classifier_setting.data_max = 1.0;
+		classifier_setting.data_min = -0.1;
+		classifier_setting.data_max = 0.1;
 		//変換器設定
 		setting.converter_setting.convert_image_threshold = 2000;
 		setting.converter_setting.sampling_rate = 100;
 		//学習装置設定
-		setting.learn_num = 8;
-		setting.equivocation = 50;
-		setting.relation_range = 8;
+		setting.learn_num = 8; //1回の学習で使うパターンの数
+		setting.equivocation = 99;
+		setting.relation_range = 24; //入力データとの関連情報をいくつ取得するか
 		setting.data_type = "image";
 		setting.db_name = "knowledge.db";
 		testament = new Testament(setting, new KMeansClassifier(classifier_setting));
 	}
 
 	void main(){
-		try{
-			//*
+			/*
 			this->testament->truncate();
-			this->learn(0, 8);
+			this->learn(0, 16);
 			//*/
-			this->bench(0, 8);
+			this->bench(0, 16);
 			//*/ 
-		}catch(std::exception e){
-			std::cout << e.what();
-		}
+
 	}
 
 	void bench(int start, int end){

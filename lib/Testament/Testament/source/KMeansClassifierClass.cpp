@@ -31,7 +31,7 @@ double KMeansClassifier::getMembership(int num, Pattern pattern, std::vector<Pat
 		}
 	}
 
-	return (min_index == num);
+	return (min_index == num) ? 1.0 : 0.0;
 //	return (this->getDistance(pattern,middle_list[num],2.0) == min) ? 1 : 0;
 }
 

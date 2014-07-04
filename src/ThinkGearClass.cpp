@@ -54,9 +54,9 @@ bool ThinkGear::Create(){
 }
 
 //指定したシリアルポートに接続を行い、IDと関連付ける
-int ThinkGear::Connect(String port_name, int bit_rate, int data_type){
+int ThinkGear::Connect(std::string port_name, int bit_rate, int data_type){
 	int errCode;
-	String comPortName = "\\\\.\\";
+	std::string comPortName = "\\\\.\\";
     comPortName += port_name;
     errCode = TG_Connect( this->connection_id, 
                           comPortName.c_str(), 
@@ -82,7 +82,7 @@ void ThinkGear::DisConnect(){
 }
 
 //読み取ったバイトををログファイルへ自動的に記録する
-int ThinkGear::StreamLog(String filename){
+int ThinkGear::StreamLog(std::string filename){
 	int errCode;
 	errCode = TG_SetStreamLog( this->connection_id, filename.c_str() );
 	if(errCode == -1){
@@ -94,7 +94,7 @@ int ThinkGear::StreamLog(String filename){
 }
 
 //解析データをログファイルへ自動的に記録する
-int ThinkGear::DataLog(String filename){
+int ThinkGear::DataLog(std::string filename){
 	int errCode;
 	errCode = TG_SetDataLog( this->connection_id, filename.c_str());
 	if(errCode == -1){
@@ -154,8 +154,8 @@ double ThinkGear::getValue(int data_type){
 }
 
 BrainWaves ThinkGear::getWaves(){
-	std::map<String,double> waves;
-	std::for_each(this->waves_map.begin(),this->waves_map.end(),[&](std::pair<String,int> itr){
+	std::map<std::string,double> waves;
+	std::for_each(this->waves_map.begin(),this->waves_map.end(),[&](std::pair<std::string,int> itr){
 		waves[itr.first] = this->getCaptureData(itr.second);
 	});
 
@@ -170,23 +170,23 @@ BrainWaves ThinkGear::getWaves(){
 BrainWaves::BrainWaves(){
 }
 
-BrainWaves::BrainWaves(std::map<String, double> waves){
-	std::map<String,double>::iterator itr;
+BrainWaves::BrainWaves(std::map<std::string, double> waves){
+	std::map<std::string,double>::iterator itr;
 	this->waves = waves;
 	for(itr = this->waves.begin() ; itr != this->waves.end() ; itr++){
 		this->parameters.push_back(itr->first);
 	}
 }
 
-std::vector<String> BrainWaves::getParameters(){
+std::vector<std::string> BrainWaves::getParameters(){
 	return this->parameters;
 }
 
-double BrainWaves::getValue(String name){
+double BrainWaves::getValue(std::string name){
 	return this->waves[name];
 }
 
-std::map<String,double> BrainWaves::toMap(){
+std::map<std::string,double> BrainWaves::toMap(){
 	return this->waves;
 }
 
@@ -235,25 +235,25 @@ double BrainWaves::getBlinkStrength(){
 }
 
 BrainWaves BrainWaves::operator+(BrainWaves brain_waves){
-	std::for_each(this->parameters.begin(), this->parameters.end(),[&](String key){
+	std::for_each(this->parameters.begin(), this->parameters.end(),[&](std::string key){
 		brain_waves.waves[key] = brain_waves.waves[key] + this->waves[key];
 	});
 	return waves;
 }
 BrainWaves BrainWaves::operator-(BrainWaves brain_waves){
-	std::for_each(this->parameters.begin(), this->parameters.end(),[&](String key){
+	std::for_each(this->parameters.begin(), this->parameters.end(),[&](std::string key){
 		brain_waves.waves[key] = brain_waves.waves[key] - this->waves[key];
 	});
 	return waves;
 }
 BrainWaves BrainWaves::operator*(BrainWaves brain_waves){
-	std::for_each(this->parameters.begin(), this->parameters.end(),[&](String key){
+	std::for_each(this->parameters.begin(), this->parameters.end(),[&](std::string key){
 		brain_waves.waves[key] = brain_waves.waves[key] * this->waves[key];
 	});
 	return waves;
 }
 BrainWaves BrainWaves::operator/(BrainWaves brain_waves){
-	std::for_each(this->parameters.begin(), this->parameters.end(),[&](String key){
+	std::for_each(this->parameters.begin(), this->parameters.end(),[&](std::string key){
 		brain_waves.waves[key] = brain_waves.waves[key] / this->waves[key];
 	});
 	return waves;

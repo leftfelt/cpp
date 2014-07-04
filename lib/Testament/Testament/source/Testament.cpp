@@ -76,9 +76,10 @@ std::vector<int> Testament::getRelationLabel(std::vector<Pattern> pattern_list, 
 
 	while((signed)label_list.size() < relation_range){
 		Dictionary dictionary;
-
+		
 		dictionary = this->dictionary_map.get(id);
 		if(dictionary.empty()){
+			//辞書マップになければDBから取得する
 			try{
 				dictionary = this->dictionary_repository->find(id, cluster_size, dimension_num);
 			}catch(std::exception e){
@@ -110,6 +111,7 @@ std::vector<int> Testament::getRelationLabel(std::vector<Pattern> pattern_list, 
 }
 
 void Testament::learn(){
+	//toLinkしたデータがlearn_num以上になったら学習を開始する
 	if(this->learn_data_list.size() < this->setting.learn_num) return;
 
 	Dictionary dictionary = this->getDictionary(this->learn_data_list);
@@ -153,7 +155,7 @@ Feature Testament::getFeature(LearnData learn_data, const Dictionary &dictionary
 	std::for_each(learn_data.begin(), learn_data.end(), [&](Pattern pattern){
 		int i;
 		for(i=0 ; i<dictionary.size() ; i++){
-			if(this->classifier->getMembership(i, pattern, dictionary) == 1) break;
+			if(this->classifier->getMembership(i, pattern, dictionary) > 0.0) break;
 		}
 		vote[i] += 1;
 	});
