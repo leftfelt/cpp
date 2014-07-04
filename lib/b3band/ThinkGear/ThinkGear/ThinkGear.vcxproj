@@ -82,7 +82,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\src\ThinkGearClass.cpp" />
+    <ClCompile Include="..\..\..\..\src\ThinkGearClient.cpp" />
     <ClCompile Include="..\..\mdt-r2_1_2\MindSet Development Tools\ThinkGear Communications Driver\win32\thinkgear_testapp.c">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
@@ -90,7 +90,7 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\include\ThinkGearClass.h" />
+    <ClInclude Include="..\..\..\..\include\ThinkGearClient.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

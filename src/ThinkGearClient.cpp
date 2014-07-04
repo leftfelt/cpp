@@ -1,4 +1,4 @@
-#include <ThinkGearClass.h>
+#include <ThinkGearClient.h>
 
 ThinkGear::ThinkGear(){
 	this->connection_id = -1;

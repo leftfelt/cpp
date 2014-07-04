@@ -1,4 +1,4 @@
-#include <ThinkGearClass.h>
+#include <ThinkGearClient.h>
 
 int main(){
 	ThinkGear think_gear;
