@@ -35,7 +35,7 @@ public:
 		
 		this->window->setSize(WIDTH,HEIGHT);
 		this->camera.SetCaptureSize(WIDTH,HEIGHT);
-		this->camera.StartCapture(1);
+		this->camera.StartCapture(0);
 		
 		this->background = new Image(WIDTH,HEIGHT);
 		*this->background = Pixel(255);

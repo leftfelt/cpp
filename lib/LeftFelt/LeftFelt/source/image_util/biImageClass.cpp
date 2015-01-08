@@ -58,12 +58,12 @@ void biImage::Create(int width, int height){
 }
 
 //画像を保存
-bool biImage::Save(String filename){
+bool biImage::Save(std::string filename){
 	throw std::exception("ImageUtil::Saveを使用してください");
 	return true;
 }
 //画像を読み込み
-bool biImage::Load(String filename){
+bool biImage::Load(std::string filename){
 	throw std::exception("ImageUtil::Loadを使用してください");
 	return true;
 }

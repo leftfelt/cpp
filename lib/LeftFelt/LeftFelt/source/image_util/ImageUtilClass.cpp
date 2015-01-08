@@ -27,157 +27,6 @@ double ImageUtil::getBulr(biImage &image){
 	return (double)(( 1.0 / num ) * 100);
 }
 
-bool ImageUtil::Save(biImage &image, String filename,short bitCount, int dataoffset){
-	FILE *op;
-	
-	BITMAPFILEHEADER file;
-	BITMAPINFOHEADER info;
-
-	unsigned char R,G,B;
-
-	op = fopen( filename.c_str(),"wb");
-	if(op == NULL ){
-		puts("画像が開けません(biWriteImage)");
-		return false;
-	}
-
-	fseek(op,0,SEEK_SET);
-	//ヘッダー作成
-	unsigned char *head_data;
-
-	//BITMAPFILEHEADER
-	strcpy((char *)&file.bfType,"BM");
-	file.bfSize =  0;
-	file.bfReserved1 = 0;
-	file.bfReserved2 = 0;
-	if(bitCount <= 8){
-		file.bfOffBits = 1024 + dataoffset;
-	}else{
-		file.bfOffBits = dataoffset;
-	}
-
-	//BITMAPINFOHEADER
-	info.biSize = 40;
-	info.biWidth = image.Width();
-	info.biHeight = image.Height();
-	info.biPlanes = 1;
-	info.biBitCount = bitCount;
-	info.biCompression = BI_RGB;
-	info.biSizeImage = 0;
-	info.biXPelsPerMeter = 0;
-	info.biYPelsPerMeter = 0;
-	info.biClrUsed = 0;
-	info.biClrImportant = 0;
-
-	head_data = (unsigned char*)malloc(sizeof(unsigned char)*file.bfOffBits); //ヘッダー保存領域を確保
-
-	for(int i = 0 ; i < sizeof(file) ; i++){
-		*(head_data+i) = *((char*)(&file)+i);
-	}
-	for(int i = 0 ; i < sizeof(info) ; i++){
-		*(head_data+sizeof(file)+i) = *((char*)(&info)+i);
-	}
-
-	//ヘッダー書き込み
-	fwrite(head_data,sizeof(unsigned char), file.bfOffBits, op);
-
-	//画素を上下反転
-	image.Height(-image.Height());
-	for(int j=0 ; j<image.Height() ; j++){
-		for(int i=0 ; i<image.Width() ; i++){
-			if(bitCount == 8){
-				G = image.Get(i,j).Lightness();
-				fwrite(	&G	, sizeof (unsigned char),1, op );
-			}else{
-				B = image.Get(i,j).Blue();
-				G = image.Get(i,j).Green();
-				R = image.Get(i,j).Red();
-				fwrite( &B	, sizeof (unsigned char),1, op );
-				fwrite(	&G	, sizeof (unsigned char),1, op );
-				fwrite( &R	, sizeof (unsigned char),1, op );
-				
-				if(bitCount == 32){
-					G = 0;
-					fwrite( &G, sizeof (unsigned char),1, op );
-				}
-			}
-		}
-		//3byteずつだと4の倍数にならないため1行ごとに1byte余分に書き込む
-		if(bitCount == 24){
-			G = 0;
-			for(int k = 0 ; k < image.Width()%4 ; k++){
-				fwrite( &G, sizeof (unsigned char),1, op );
-			}
-		}
-	}
-
-	//画素を上下反転
-	image.Height(-image.Height());
-
-	fclose(op);
-
-	return true;
-}
-
-bool ImageUtil::Load(biImage &image, String filename){
-	FILE *fp;
-
-	int width, height;
-	short bitCount ;
-	int data_ofset;
-	unsigned char R,G,B;
-	
-	fp = fopen( filename.c_str(),"rb");
-	if(fp == NULL ){
-		throw std::exception("画像が開けません(biLoadImage)");
-		return false;
-	}
-
-	//ヘッダー部分読み取り
-	fseek(fp,sizeof(unsigned char)*10,SEEK_CUR);
-	fread( &data_ofset, sizeof (unsigned int),1, fp );//データオフセット(ヘッダサイズ)
-	fseek(fp,sizeof(unsigned char)*4,SEEK_CUR);
-	fread( &width, sizeof(long),1,fp );//&幅
-	fread( &height, sizeof(long),1,fp);//高さ
-	fseek(fp,sizeof(unsigned char)*2,SEEK_CUR);
-	fread( &bitCount, sizeof(unsigned short),1,fp);//ビットの深さ
-
-	fseek(fp,data_ofset,SEEK_SET);
-
-	image.Create(width, height);
-
-	//画像読み込み
-	for(int j=0 ; j<image.Height() ; j++){
-		for(int i=0 ; i<image.Width() ; i++){
-			if(bitCount == 8){
-				fread( &G	, sizeof(unsigned char), 1, fp );
-				image.Put(i,j,Pixel(G));
-			}else{
-				fread( &B	, sizeof(unsigned char), 1, fp );
-				fread( &G	, sizeof(unsigned char), 1, fp );
-				fread( &R	, sizeof(unsigned char), 1, fp );
-
-				image.Put(i,j,Pixel(R,G,B));
-
-				if(bitCount == 32)fread( &G, sizeof (unsigned char), 1, fp );
-			}
-		}
-		//3byteずつだと4の倍数にならないため1行ごとに1byte余分に読み込む
-		if(bitCount == 24){
-			for(int k = 0 ; k < image.Width()%4 ; k++){
-				fread( &G, sizeof (unsigned char), 1, fp );
-			}
-		}
-	}
-
-	//画素を上下反転
-	image.Height(-image.Height());
-
-	fclose(fp);
-
-	return true;
-}
-
 void ImageUtil::Shrink(biImage &image){
 	int cnt;
 	biImage output(image.Width(),image.Height());
@@ -1038,69 +887,6 @@ int ImageUtil::getConnectedNum(biImage &image,int x,int y){
 	return count;
 }
 
-void ImageUtil::toCvImage(IplImage **cv_image, biImage &image){
-	*cv_image = cvCreateImage(
-		cvSize(image.Width(), image.Height()),
-		IPL_DEPTH_8U,
-		3
-	);
-
-	biImage::for_each(image,[&](int x, int y){
-		Pixel pixel = image.Get(x,y);
-		(*cv_image)->imageData[x*3+0+y*((*cv_image)->widthStep)] = pixel.Blue();
-		(*cv_image)->imageData[x*3+1+y*((*cv_image)->widthStep)] = pixel.Green();
-		(*cv_image)->imageData[x*3+2+y*((*cv_image)->widthStep)] = pixel.Red();
-	});
-}
-
-void ImageUtil::fromCvImage(biImage &image, IplImage *cv_image){
-	if(cv_image->depth == IPL_DEPTH_8U && cv_image->nChannels == 3 && cv_image->imageData != NULL){
-		for(int y = 0 ; y < cv_image->height ; y++){
-			for(int x = 0 ; x < cv_image->width ; x++){
-				image.Put(x,y,Pixel(
-					(*(cv_image->imageData+x*3+2+y*cv_image->widthStep)),
-					(*(cv_image->imageData+x*3+1+y*cv_image->widthStep)),
-					(*(cv_image->imageData+x*3+0+y*cv_image->widthStep))
-					));
-			}
-		}
-	}else{
-		throw std::exception("can't to biImage");
-	}
-}
-
-
-std::vector<SurfFeature> ImageUtil::getSurf(biImage &image, double threshold){
-
-	IplImage *ipl_image = NULL;
-	ImageUtil::toCvImage(&ipl_image, image);
-	cv::Mat mat(ipl_image), grayImage;
-	
-	//toGray
-	cv::cvtColor(mat,grayImage,CV_BGR2GRAY);
-
-	cv::SURF calc_surf = cv::SURF(threshold,4,2,false);
-
-	std::vector<cv::KeyPoint> kp_vec;
-	std::vector<float> desc_vec;
-	int dimension_num = calc_surf.descriptorSize();
-	calc_surf(grayImage, cv::Mat(), kp_vec, desc_vec);
-
-	std::vector<SurfFeature> result;
-	//*
-	for(int i = 0 ; i < (signed)kp_vec.size() ; i++){
-		SurfFeature surf;
-		surf.point = kp_vec.at(i);
-		for(int j = 0 ; j < dimension_num ; j++){
-			surf.features.push_back(desc_vec.at(i*dimension_num+j));
-		}
-		result.push_back(surf);
-	}
-	//*/
-	cvReleaseImage(&ipl_image);
-	return result;
-}
-
 //*
 //ラベリング
 int ImageUtil::Labeling(biImage &image){
@@ -1296,3 +1082,219 @@ int ImageUtil::Lookup_update(int i,int * label)
 
 	return a;
 }
+
+/* OpenCV依存部分
+void ImageUtil::toCvImage(IplImage **cv_image, biImage &image){
+	*cv_image = cvCreateImage(
+		cvSize(image.Width(), image.Height()),
+		IPL_DEPTH_8U,
+		3
+	);
+
+	biImage::for_each(image,[&](int x, int y){
+		Pixel pixel = image.Get(x,y);
+		(*cv_image)->imageData[x*3+0+y*((*cv_image)->widthStep)] = pixel.Blue();
+		(*cv_image)->imageData[x*3+1+y*((*cv_image)->widthStep)] = pixel.Green();
+		(*cv_image)->imageData[x*3+2+y*((*cv_image)->widthStep)] = pixel.Red();
+	});
+}
+
+void ImageUtil::fromCvImage(biImage &image, IplImage *cv_image){
+	if(cv_image->depth == IPL_DEPTH_8U && cv_image->nChannels == 3 && cv_image->imageData != NULL){
+		for(int y = 0 ; y < cv_image->height ; y++){
+			for(int x = 0 ; x < cv_image->width ; x++){
+				image.Put(x,y,Pixel(
+					(*(cv_image->imageData+x*3+2+y*cv_image->widthStep)),
+					(*(cv_image->imageData+x*3+1+y*cv_image->widthStep)),
+					(*(cv_image->imageData+x*3+0+y*cv_image->widthStep))
+					));
+			}
+		}
+	}else{
+		throw std::exception("can't to biImage");
+	}
+}
+
+
+std::vector<SurfFeature> ImageUtil::getSurf(biImage &image, double threshold){
+
+	IplImage *ipl_image = NULL;
+	ImageUtil::toCvImage(&ipl_image, image);
+	cv::Mat mat(ipl_image), grayImage;
+	
+	//toGray
+	cv::cvtColor(mat,grayImage,CV_BGR2GRAY);
+
+	cv::SURF calc_surf = cv::SURF(threshold,4,2,false);
+
+	std::vector<cv::KeyPoint> kp_vec;
+	std::vector<float> desc_vec;
+	int dimension_num = calc_surf.descriptorSize();
+	calc_surf(grayImage, cv::Mat(), kp_vec, desc_vec);
+
+	std::vector<SurfFeature> result;
+	for(int i = 0 ; i < (signed)kp_vec.size() ; i++){
+		SurfFeature surf;
+		surf.point = kp_vec.at(i);
+		for(int j = 0 ; j < dimension_num ; j++){
+			surf.features.push_back(desc_vec.at(i*dimension_num+j));
+		}
+		result.push_back(surf);
+	}
+	cvReleaseImage(&ipl_image);
+	return result;
+}
+*/
+
+/* ImageIOに一旦移動させたい
+bool ImageUtil::Save(biImage &image, std::string filename,short bitCount, int dataoffset){
+	FILE *op;
+	
+	BITMAPFILEHEADER file;
+	BITMAPINFOHEADER info;
+
+	unsigned char R,G,B;
+
+	op = fopen( filename.c_str(),"wb");
+	if(op == NULL ){
+		puts("画像が開けません(biWriteImage)");
+		return false;
+	}
+
+	fseek(op,0,SEEK_SET);
+	//ヘッダー作成
+	unsigned char *head_data;
+
+	//BITMAPFILEHEADER
+	strcpy((char *)&file.bfType,"BM");
+	file.bfSize =  0;
+	file.bfReserved1 = 0;
+	file.bfReserved2 = 0;
+	if(bitCount <= 8){
+		file.bfOffBits = 1024 + dataoffset;
+	}else{
+		file.bfOffBits = dataoffset;
+	}
+
+	//BITMAPINFOHEADER
+	info.biSize = 40;
+	info.biWidth = image.Width();
+	info.biHeight = image.Height();
+	info.biPlanes = 1;
+	info.biBitCount = bitCount;
+	info.biCompression = BI_RGB;
+	info.biSizeImage = 0;
+	info.biXPelsPerMeter = 0;
+	info.biYPelsPerMeter = 0;
+	info.biClrUsed = 0;
+	info.biClrImportant = 0;
+
+	head_data = (unsigned char*)malloc(sizeof(unsigned char)*file.bfOffBits); //ヘッダー保存領域を確保
+
+	for(int i = 0 ; i < sizeof(file) ; i++){
+		*(head_data+i) = *((char*)(&file)+i);
+	}
+	for(int i = 0 ; i < sizeof(info) ; i++){
+		*(head_data+sizeof(file)+i) = *((char*)(&info)+i);
+	}
+
+	//ヘッダー書き込み
+	fwrite(head_data,sizeof(unsigned char), file.bfOffBits, op);
+
+	//画素を上下反転
+	image.Height(-image.Height());
+	for(int j=0 ; j<image.Height() ; j++){
+		for(int i=0 ; i<image.Width() ; i++){
+			if(bitCount == 8){
+				G = image.Get(i,j).Lightness();
+				fwrite(	&G	, sizeof (unsigned char),1, op );
+			}else{
+				B = image.Get(i,j).Blue();
+				G = image.Get(i,j).Green();
+				R = image.Get(i,j).Red();
+				fwrite( &B	, sizeof (unsigned char),1, op );
+				fwrite(	&G	, sizeof (unsigned char),1, op );
+				fwrite( &R	, sizeof (unsigned char),1, op );
+				
+				if(bitCount == 32){
+					G = 0;
+					fwrite( &G, sizeof (unsigned char),1, op );
+				}
+			}
+		}
+		//3byteずつだと4の倍数にならないため1行ごとに1byte余分に書き込む
+		if(bitCount == 24){
+			G = 0;
+			for(int k = 0 ; k < image.Width()%4 ; k++){
+				fwrite( &G, sizeof (unsigned char),1, op );
+			}
+		}
+	}
+
+	//画素を上下反転
+	image.Height(-image.Height());
+
+	fclose(op);
+
+	return true;
+}
+
+bool ImageUtil::Load(biImage &image, std::string filename){
+	FILE *fp;
+
+	int width, height;
+	short bitCount ;
+	int data_ofset;
+	unsigned char R,G,B;
+	
+	fp = fopen( filename.c_str(),"rb");
+	if(fp == NULL ){
+		throw std::exception("画像が開けません(biLoadImage)");
+		return false;
+	}
+
+	//ヘッダー部分読み取り
+	fseek(fp,sizeof(unsigned char)*10,SEEK_CUR);
+	fread( &data_ofset, sizeof (unsigned int),1, fp );//データオフセット(ヘッダサイズ)
+	fseek(fp,sizeof(unsigned char)*4,SEEK_CUR);
+	fread( &width, sizeof(long),1,fp );//&幅
+	fread( &height, sizeof(long),1,fp);//高さ
+	fseek(fp,sizeof(unsigned char)*2,SEEK_CUR);
+	fread( &bitCount, sizeof(unsigned short),1,fp);//ビットの深さ
+
+	fseek(fp,data_ofset,SEEK_SET);
+
+	image.Create(width, height);
+
+	//画像読み込み
+	for(int j=0 ; j<image.Height() ; j++){
+		for(int i=0 ; i<image.Width() ; i++){
+			if(bitCount == 8){
+				fread( &G	, sizeof(unsigned char), 1, fp );
+				image.Put(i,j,Pixel(G));
+			}else{
+				fread( &B	, sizeof(unsigned char), 1, fp );
+				fread( &G	, sizeof(unsigned char), 1, fp );
+				fread( &R	, sizeof(unsigned char), 1, fp );
+
+				image.Put(i,j,Pixel(R,G,B));
+
+				if(bitCount == 32)fread( &G, sizeof (unsigned char), 1, fp );
+			}
+		}
+		//3byteずつだと4の倍数にならないため1行ごとに1byte余分に読み込む
+		if(bitCount == 24){
+			for(int k = 0 ; k < image.Width()%4 ; k++){
+				fread( &G, sizeof (unsigned char), 1, fp );
+			}
+		}
+	}
+
+	//画素を上下反転
+	image.Height(-image.Height());
+
+	fclose(fp);
+
+	return true;
+}
+*/

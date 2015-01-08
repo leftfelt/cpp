@@ -95,6 +95,7 @@
   <ItemGroup>
     <ClCompile Include="..\LeftFelt\source\base\AreaClass.cpp" />
     <ClCompile Include="..\LeftFelt\source\base\HttpClass.cpp" />
+    <ClCompile Include="..\LeftFelt\source\base\LogClass.cpp" />
     <ClCompile Include="..\LeftFelt\source\base\MathClass.cpp" />
     <ClCompile Include="..\LeftFelt\source\base\NetworkClass.cpp" />
     <ClCompile Include="..\LeftFelt\source\base\NumberClass.cpp" />

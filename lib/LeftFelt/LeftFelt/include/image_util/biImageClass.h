@@ -1,10 +1,8 @@
 #ifndef BIIMAGECLASS_INCLUDE
 #define BIIMAGECLASS_INCLUDE
 
-#include <base/MathClass.h>
 #include <image_util/PixelClass.h>
 #include <base/PointClass.h>
-#include <base/StringClass.h>
 #include <functional>
 
 //biImageクラス
@@ -25,8 +23,8 @@ public:
 	~biImage();
 	void Create(int width, int height);
 	void Delete();
-	bool Save(String filename);//保存
-	bool Load(String filename);//読み込み
+	bool Save(std::string filename);//保存
+	bool Load(std::string filename);//読み込み
 	void Paste(int x, int y,biImage &image, int mix_rate = 100);//貼り付け
 	biImage Cut(int x, int y, int width, int height);//部分コピー
 	biImage Rotate(int angle);//回転

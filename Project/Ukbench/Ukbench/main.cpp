@@ -54,7 +54,7 @@ public:
 	}
 
 	void main(){
-			/*
+			//*
 			this->testament->truncate();
 			this->learn(0, 16);
 			//*/

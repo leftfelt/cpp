@@ -1,33 +1,13 @@
 #ifndef IMAGEUTILCLASS_INCLUDE
 #define IMAGEUTILCLASS_INCLUDE
 
-#ifdef _DEBUG
-	#pragma comment(lib,"opencv_core242d.lib")
-	#pragma comment(lib,"opencv_features2d242d.lib")
-	#pragma comment(lib,"opencv_highgui242d.lib")
-	#pragma comment(lib,"opencv_imgproc242d.lib")
-	#pragma comment(lib,"opencv_nonfree242d.lib")
-#else
-	#pragma comment(lib,"opencv_core242.lib")
-	#pragma comment(lib,"opencv_features2d242.lib")
-	#pragma comment(lib,"opencv_highgui242.lib")
-	#pragma comment(lib,"opencv_imgproc242.lib")
-	#pragma comment(lib,"opencv_nonfree242.lib")
-#endif
-
+//OpenCVの依存をなくす
 #include <map>
-#include <opencv2/opencv.hpp>
-#include <opencv2/nonfree/nonfree.hpp>
-#include <Windows.h>
 #include <image_util/biImageClass.h>
 #include <base/MathClass.h>
 #include <base/AreaClass.h>
 #include <base/PointClass.h>
 //*
-typedef struct SurfFeature{
-		cv::KeyPoint point;
-		std::vector<float> features;
-} SurfFeature;
 
 class ImageUtil{
 private:
@@ -76,13 +56,12 @@ public:
 	int static Labeling(biImage &image);//ラベリング 番号は1から開始
 	int static SamplingObject(biImage &image, int label);//ラベル番号からオブジェクトを抽出する。ついでに面積も返す。
 	int static SamplingLargeObject(biImage &image);//ラベリング済み画像から面積が最大のオブジェクトを抽出する
-	bool static Save(biImage &image, String filename, short bitCount = 24, int dataoffset = 54);
-	bool static Load(biImage &image, String filename);
 	double static getBulr(biImage &image); //ぼやけ度を取得する
-	void static toCvImage(IplImage **cv_image, biImage &image); //OpenCV用に変換
-	void static fromCvImage(biImage &image, IplImage *cv_image); //OpenCVから変換
-	std::vector<SurfFeature> static getSurf(biImage &image, double threshold);
 	void static costomBinalize(biImage &image, Pixel attention, Pixel sigma); // <-- TODO:名前適当だからかえる！
+	/** ImageIOに移動させる bitmapではなくてもいい ppm形式とか
+	bool static Save(biImage &image, std::string filename, short bitCount = 24, int dataoffset = 54);
+	bool static Load(biImage &image, std::string filename);
+	*/
 };
 
 #endif
